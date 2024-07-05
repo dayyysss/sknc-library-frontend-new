@@ -1,0 +1,14 @@
+.chart_sec {
+  display: grid;
+  grid-template-columns: 100%;
+  box-sizing: border-box;
+
+  .title {
+    color: grey;
+    font-size: 18px;
+  }
+
+  .strokee {
+    stroke: rgb(228, 225, 225);
+  }
+}

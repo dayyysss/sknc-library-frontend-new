@@ -1,0 +1,80 @@
+.list_page {
+  display: grid;
+  grid-template-columns: 17% 83%;
+  justify-content: center;
+  width: 100%;
+
+  .list_page_main {
+    .data_table {
+      padding: 10px 10px;
+
+      .btnn {
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+
+        .buttons-container {
+          display: flex;
+          align-items: center;
+        }
+
+        .import-excel-btn {
+          background: none;
+          border: 1px solid #38c02c;
+          padding: 8px 15px;
+          background-color: #38c02c;
+          color: white;
+          font-size: 17px;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          text-transform: capitalize;
+          display: flex;
+          align-items: center;
+
+          .excel-icon {
+            margin-right: 5px;
+          }
+
+          &:hover {
+            background-color: white;
+            color: #51f859;
+            border: 1px solid #51f85f;
+          }
+        }
+
+        button {
+          background: none;
+          border: 1px solid #7451f8;
+          padding: 8px 15px;
+          background-color: #7451f8;
+          color: white;
+          font-size: 17px;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          text-transform: capitalize;
+
+          &:hover {
+            background-color: white;
+            color: #7451f8;
+            border: 1px solid #7451f8;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .list_page {
+    display: grid;
+    grid-template-columns: 100%;
+    justify-content: center;
+
+    .home_sidebar {
+      display: none;
+    }
+  }
+}
