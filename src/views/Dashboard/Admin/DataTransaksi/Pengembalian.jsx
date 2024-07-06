@@ -21,6 +21,7 @@ import AddPengembalian from "./AddPengembalian.jsx";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { RiCheckboxCircleFill } from "react-icons/ri";
 import LayoutAdmin from '../../../../layouts/Dashboard/AdminLayout'
+import GeneratePdf from "../GeneratePdfPengembalian.jsx"
 
 const PengembalianCompo = () => {
   const [books, setBooks] = useState([]);
@@ -32,6 +33,7 @@ const PengembalianCompo = () => {
   const [selectedBorrow, setSelectedBorrow] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -66,7 +68,7 @@ const PengembalianCompo = () => {
       console.error(error);
     }
   };
-  
+
   const handleCloseDetailModal = () => {
     setSelectedBorrow(null);
     setIsDetailModalOpen(false);
@@ -170,7 +172,7 @@ const PengembalianCompo = () => {
         console.error("Token not available. Please login.");
         return;
       }
-  
+
       const response = await axios.put(
         `http://127.0.0.1:8000/api/restore/${id}/update-status`,
         { status: "Dikembalikan" },
@@ -180,7 +182,7 @@ const PengembalianCompo = () => {
           },
         }
       );
-  
+
       if (response.data.message) {
         Swal.fire({
           icon: "success",
@@ -203,8 +205,8 @@ const PengembalianCompo = () => {
       });
     }
   };
-  
-  
+
+
   const handleStatusDenda = async (id, status) => {
     try {
       const token = getAuthToken();
@@ -212,7 +214,7 @@ const PengembalianCompo = () => {
         console.error("Token not available. Please login.");
         return;
       }
-  
+
       if (status === "Denda Belum Dibayar") {
         const response = await axios.put(
           `http://127.0.0.1:8000/api/restore/${id}/update-fine`,
@@ -223,7 +225,7 @@ const PengembalianCompo = () => {
             },
           }
         );
-  
+
         if (response.data.message) {
           Swal.fire({
             icon: "success",
@@ -244,201 +246,222 @@ const PengembalianCompo = () => {
     }
   };
 
+  const handleGeneratePdfModalOpen = () => {
+    setIsGenerateModalOpen(true); // Open generate pdf modal
+  };
+
+
   return (
     <LayoutAdmin>
-    <div className="px-[25px] pt-[25px] pb-[370px] bg-[#F8F9FC]">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center">
-          <h1 className="text-[28px] leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
-            Pengembalian Buku
-          </h1>
+      <div className="px-[25px] pt-[25px] pb-[370px] bg-[#F8F9FC]">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center">
+            <h1 className="text-[28px] leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
+              Pengembalian Buku
+            </h1>
+          </div>
+          <div className="flex items-center">
+            <TextField
+              label="Cari data pengembalian.."
+              variant="outlined"
+              size="small"
+              className="px-4 py-2 mr-4 rounded"
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
+            <button
+              onClick={handleGeneratePdfModalOpen}
+              className="bg-blue-500 text-white px-4 py-2 rounded mr-4 ml-4 flex items-center"
+            >
+              <FaFilePdf className="mr-2" />
+              Cetak Pengembalian
+            </button>
+            <button
+              onClick={openAddModal}
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+            >
+              Tambah Pengembalian
+            </button>
+          </div>
         </div>
-        <div className="flex items-center">
-          <TextField
-            label="Cari data pengembalian.."
-            variant="outlined"
-            size="small"
-            className="px-4 py-2 mr-4 rounded"
-            value={searchQuery}
-            onChange={handleSearchChange}
-          />
-          <button
-            onClick={generatePdf}
-            className="bg-blue-500 text-white px-4 py-2 rounded mr-4 ml-4 flex items-center"
-          >
-            <FaFilePdf className="mr-2" />
-            Cetak Pengembalian
-          </button>
-          <button
-            onClick={openAddModal}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Tambah Pengembalian
-          </button>
-        </div>
-      </div>
-      <TableContainer component={Paper} className="table_list mt-10">
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell className="table_cell">No</TableCell>
-              <TableCell className="table_cell">Nama Peminjam</TableCell>
-              <TableCell className="table_cell">Judul Buku</TableCell>
-              <TableCell className="table_cell">Tanggal Pengembalian</TableCell>
-              <TableCell className="table_cell">Status</TableCell>
-              <TableCell className="table_cell">Denda</TableCell>
-              <TableCell className="table_cell">Aksi</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {Array.isArray(books.data) && books.data.length > 0 ? (
-              books.data.map((pengembalian, index) => (
-                <TableRow key={pengembalian.id}>
-                  <TableCell className="table_cell">
-                    {(books.current_page - 1) * books.per_page + index + 1}
-                  </TableCell>
-                  <TableCell className="table_cell">{pengembalian.user.name}</TableCell>
-                  <TableCell className="table_cell">{pengembalian.book.title}</TableCell>
-                  <TableCell className="table_cell">{pengembalian.returndate}</TableCell>
-                  <TableCell className="table_cell">
-                    <span className={`text-white px-3 rounded-full p-1 ${pengembalian.status === "Menunggu"
-                      ? "bg-yellow-500"
-                      : pengembalian.status === "Dikembalikan"
-                        ? "bg-green-500"
-                        : pengembalian.status === "Denda Belum Dibayar"
-                          ? "bg-red-500"
-                          : pengembalian.status === "Denda Dibayar"
-                            ? "bg-blue-500"
-                            : ""
-                      }`}>
-                      {pengembalian.status}
-                    </span>
-                  </TableCell>
-                  <TableCell className="table_cell">{pengembalian.fine}</TableCell>
-                  <TableCell className="table_cell">
-                    <div className="flex items-center">
-                      {pengembalian.status === "Menunggu" && (
-                        <MdOutlineCheckBox
-                          onClick={() => handleStatusChange(pengembalian.id, pengembalian.status)}
-                          className="text-white cursor-pointer text-lg bg-green-500 rounded-full p-1 mr-2 w-7 h-7"
+        <TableContainer component={Paper} className="table_list mt-10">
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell className="table_cell">No</TableCell>
+                <TableCell className="table_cell">Nama Peminjam</TableCell>
+                <TableCell className="table_cell">Judul Buku</TableCell>
+                <TableCell className="table_cell">Tanggal Pengembalian</TableCell>
+                <TableCell className="table_cell">Status</TableCell>
+                <TableCell className="table_cell">Denda</TableCell>
+                <TableCell className="table_cell">Aksi</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {Array.isArray(books.data) && books.data.length > 0 ? (
+                books.data.map((pengembalian, index) => (
+                  <TableRow key={pengembalian.id}>
+                    <TableCell className="table_cell">
+                      {(books.current_page - 1) * books.per_page + index + 1}
+                    </TableCell>
+                    <TableCell className="table_cell">{pengembalian.user.name}</TableCell>
+                    <TableCell className="table_cell">{pengembalian.book.title}</TableCell>
+                    <TableCell className="table_cell">{pengembalian.returndate}</TableCell>
+                    <TableCell className="table_cell">
+                      <span className={`text-white px-3 rounded-full p-1 ${pengembalian.status === "Menunggu"
+                        ? "bg-yellow-500"
+                        : pengembalian.status === "Dikembalikan"
+                          ? "bg-green-500"
+                          : pengembalian.status === "Denda Belum Dibayar"
+                            ? "bg-red-500"
+                            : pengembalian.status === "Denda Dibayar"
+                              ? "bg-blue-500"
+                              : ""
+                        }`}>
+                        {pengembalian.status}
+                      </span>
+                    </TableCell>
+                    <TableCell className="table_cell">{pengembalian.fine}</TableCell>
+                    <TableCell className="table_cell">
+                      <div className="flex items-center">
+                        {pengembalian.status === "Menunggu" && (
+                          <MdOutlineCheckBox
+                            onClick={() => handleStatusChange(pengembalian.id, pengembalian.status)}
+                            className="text-white cursor-pointer text-lg bg-green-500 rounded-full p-1 mr-2 w-7 h-7"
+                          />
+                        )}
+                        {pengembalian.status === "Denda Belum Dibayar" && (
+                          <RiCheckboxCircleFill
+                            onClick={() => handleStatusDenda(pengembalian.id, pengembalian.status)}
+                            className="text-white cursor-pointer text-lg bg-green-500 rounded-full p-1 mr-2 w-7 h-7"
+                          />
+                        )}
+                        <RiDeleteBin5Line
+                          onClick={() => handleDelete(pengembalian.id)}
+                          className="text-white cursor-pointer w-7 h-7 bg-red-500 rounded-full p-1 mr-2"
                         />
-                      )}
-                      {pengembalian.status === "Denda Belum Dibayar" && (
-                        <RiCheckboxCircleFill
-                          onClick={() => handleStatusDenda(pengembalian.id, pengembalian.status)}
-                          className="text-white cursor-pointer text-lg bg-green-500 rounded-full p-1 mr-2 w-7 h-7"
-                        />
-                      )}
-                      <RiDeleteBin5Line
-                        onClick={() => handleDelete(pengembalian.id)}
-                        className="text-white cursor-pointer w-7 h-7 bg-red-500 rounded-full p-1 mr-2"
-                      />
-                    </div>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center">
+                    Tidak ada data pengembalian.
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
+              )}
+            </TableBody>
+            <TableFooter>
               <TableRow>
-                <TableCell colSpan={7} className="text-center">
-                  Tidak ada data pengembalian.
-                </TableCell>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25]}
+                  colSpan={12}
+                  count={totalBooks}
+                  rowsPerPage={rowsPerPage}
+                  page={page - 1}
+                  SelectProps={{
+                    inputProps: { 'aria-label': 'rows per page' },
+                    native: true,
+                  }}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
               </TableRow>
-            )}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                colSpan={12}
-                count={totalBooks}
-                rowsPerPage={rowsPerPage}
-                page={page - 1}
-                SelectProps={{
-                  inputProps: { 'aria-label': 'rows per page' },
-                  native: true,
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
-      {isAddModalOpen && <AddPengembalian closeModal={closeAddModal} />}
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        open={isDetailModalOpen}
-        onClose={handleCloseDetailModal} // Close modal when clicking outside the modal area
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={isDetailModalOpen}>
-          <div className="fixed inset-0 flex items-center justify-center" onClick={handleCloseDetailModal}>
-            <div className="bg-white p-8 rounded-lg w-[30%]" onClick={(e) => e.stopPropagation()}>
-              <Button variant="outlined" onClick={handleCloseDetailModal} className="absolute top-[-15px] right-[-5px] text-gray-500 hover:text-gray-700 focus:outline-none">
-                Kembali
-              </Button>
-              <h2 className="text-xl font-bold mb-4">Detail Peminjaman</h2>
-              {selectedBorrow && (
-                // flex 1
-                <div className=" md:flex-row">
-                  <div className="md:w-1/2 flex ">
-                    <div className="bg-gray-100 p-4 rounded-md mb-4 ">
-                      <p className="text-sm font-semibold">Nama Peminjam:</p>
-                      <p>{selectedBorrow.user.name}</p>
-                      <p className="text-sm font-semibold">Email:</p>
-                      <p>{selectedBorrow.user.email}</p>
-                      <p className="text-sm font-semibold">Status User:</p>
-                      <p>{selectedBorrow.user.status}</p>
+            </TableFooter>
+          </Table>
+        </TableContainer>
+        {isAddModalOpen && <AddPengembalian closeModal={closeAddModal} />}
+        <Modal
+          aria-labelledby="transition-modal-title"
+          aria-describedby="transition-modal-description"
+          open={isDetailModalOpen}
+          onClose={handleCloseDetailModal} // Close modal when clicking outside the modal area
+          closeAfterTransition
+          BackdropComponent={Backdrop}
+          BackdropProps={{
+            timeout: 500,
+          }}
+        >
+          <Fade in={isDetailModalOpen}>
+            <div className="fixed inset-0 flex items-center justify-center" onClick={handleCloseDetailModal}>
+              <div className="bg-white p-8 rounded-lg w-[30%]" onClick={(e) => e.stopPropagation()}>
+                <Button variant="outlined" onClick={handleCloseDetailModal} className="absolute top-[-15px] right-[-5px] text-gray-500 hover:text-gray-700 focus:outline-none">
+                  Kembali
+                </Button>
+                <h2 className="text-xl font-bold mb-4">Detail Peminjaman</h2>
+                {selectedBorrow && (
+                  // flex 1
+                  <div className=" md:flex-row">
+                    <div className="md:w-1/2 flex ">
+                      <div className="bg-gray-100 p-4 rounded-md mb-4 ">
+                        <p className="text-sm font-semibold">Nama Peminjam:</p>
+                        <p>{selectedBorrow.user.name}</p>
+                        <p className="text-sm font-semibold">Email:</p>
+                        <p>{selectedBorrow.user.email}</p>
+                        <p className="text-sm font-semibold">Status User:</p>
+                        <p>{selectedBorrow.user.status}</p>
+                      </div>
+                      <div className="md:w-1/2 md:ml-8 ">
+                        <div className="bg-gray-100 p-4 rounded-md mb-4 w-[200px]">
+                          <p className="text-sm font-semibold">Judul Buku:</p>
+                          <p>{selectedBorrow.book.title}</p>
+                          <p className="text-sm font-semibold">Pengarang:</p>
+                          <p>{selectedBorrow.book.writer}</p>
+                          <p className="text-sm font-semibold">Tahun Terbit:</p>
+                          <p>{selectedBorrow.book.published}</p>
+                        </div>
+                      </div>
                     </div>
-                    <div className="md:w-1/2 md:ml-8 ">
-                      <div className="bg-gray-100 p-4 rounded-md mb-4 w-[200px]">
-                        <p className="text-sm font-semibold">Judul Buku:</p>
-                        <p>{selectedBorrow.book.title}</p>
-                        <p className="text-sm font-semibold">Pengarang:</p>
-                        <p>{selectedBorrow.book.writer}</p>
-                        <p className="text-sm font-semibold">Tahun Terbit:</p>
-                        <p>{selectedBorrow.book.published}</p>
+                    {/* flex 2 */}
+                    <div className="md:w-1/2 md:ml-8 flex items-center w-full gap-5">
+                      <div className="bg-gray-100 p-4 rounded-md mb-4">
+                        <p className="text-sm font-semibold">Jumlah Buku Dipinjam:</p>
+                        <p>{selectedBorrow.amount_borrowed}</p>
+                      </div>
+                      <div className="bg-gray-100 p-4 rounded-md mb-4">
+                        <p className="text-sm font-semibold">Status:</p>
+                        <p className=" rounded-full p-1 bg-green-500 px-4 text-white">{selectedBorrow.status}</p>
+                      </div>
+                      <div className="bg-gray-100 p-4 rounded-md mb-4">
+                        <p className="text-sm font-semibold">Deadline:</p>
+                        <p>{selectedBorrow.deadline}</p>
+                      </div>
+                    </div>
+                    {/* flex 3 */}
+                    <div className="md:w-1/2 md:ml-8 flex items-center w-full gap-5">
+                      <div className="bg-gray-100 p-4 rounded-md mb-4">
+                        <p className="text-sm font-semibold">Awal Peminjaman:</p>
+                        <p>{selectedBorrow.borrowing_start}</p>
+                      </div>
+                      <div className="bg-gray-100 p-4 rounded-md mb-4">
+                        <p className="text-sm font-semibold">Batas Waktu Pengembalian:</p>
+                        <p>{selectedBorrow.borrowing_end}</p>
                       </div>
                     </div>
                   </div>
-                  {/* flex 2 */}
-                  <div className="md:w-1/2 md:ml-8 flex items-center w-full gap-5">
-                    <div className="bg-gray-100 p-4 rounded-md mb-4">
-                      <p className="text-sm font-semibold">Jumlah Buku Dipinjam:</p>
-                      <p>{selectedBorrow.amount_borrowed}</p>
-                    </div>
-                    <div className="bg-gray-100 p-4 rounded-md mb-4">
-                      <p className="text-sm font-semibold">Status:</p>
-                      <p className=" rounded-full p-1 bg-green-500 px-4 text-white">{selectedBorrow.status}</p>
-                    </div>
-                    <div className="bg-gray-100 p-4 rounded-md mb-4">
-                      <p className="text-sm font-semibold">Deadline:</p>
-                      <p>{selectedBorrow.deadline}</p>
-                    </div>
-                  </div>
-                  {/* flex 3 */}
-                  <div className="md:w-1/2 md:ml-8 flex items-center w-full gap-5">
-                    <div className="bg-gray-100 p-4 rounded-md mb-4">
-                      <p className="text-sm font-semibold">Awal Peminjaman:</p>
-                      <p>{selectedBorrow.borrowing_start}</p>
-                    </div>
-                    <div className="bg-gray-100 p-4 rounded-md mb-4">
-                      <p className="text-sm font-semibold">Batas Waktu Pengembalian:</p>
-                      <p>{selectedBorrow.borrowing_end}</p>
-                    </div>
-                  </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </div>
-        </Fade>
-      </Modal>
-    </div >
+          </Fade>
+        </Modal>
+        {/* Generate PDF Modal */}
+        <Modal
+          open={isGenerateModalOpen} // Use state to control modal open state
+          onClose={() => setIsGenerateModalOpen(false)} // Close modal function
+          aria-labelledby="generate-pdf-modal-title"
+          aria-describedby="generate-pdf-modal-description"
+          className="flex items-center justify-center"
+        >
+          <Fade in={isGenerateModalOpen}>
+            <div className="modal-content">
+              <GeneratePdf // Pass props to GeneratePdf component
+                onClose={() => setIsGenerateModalOpen(false)} // Close modal function
+              />
+            </div>
+          </Fade>
+        </Modal>
+      </div >
     </LayoutAdmin>
   );
 };

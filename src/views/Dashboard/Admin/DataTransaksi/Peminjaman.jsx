@@ -19,7 +19,7 @@ import { MdOutlineCheckBox } from "react-icons/md";
 import { FaFilePdf } from "react-icons/fa";
 import AddPeminjaman from "./AddPengembalian";
 import LayoutAdmin from '../../../../layouts/Dashboard/AdminLayout'
-import GeneratePdf from "../GeneratePdf";
+import GeneratePdf from "../GeneratePdfPeminjaman"
 
 const PeminjamanCompo = () => {
   const [books, setBooks] = useState([]);

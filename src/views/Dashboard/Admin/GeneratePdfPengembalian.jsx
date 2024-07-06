@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import axios from 'axios';
-import Swal from 'sweetalert2';
+import React, { useState } from "react";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const GeneratePdf = ({ onClose }) => {
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   const handleGenerate = async () => {
     try {
@@ -16,7 +16,9 @@ const GeneratePdf = ({ onClose }) => {
         return;
       }
 
-      const response = await axios.get('http://127.0.0.1:8000/api/borrow/generateBorrowPdf', {
+      const response = await axios({
+        method: "post",
+        url: "http://127.0.0.1:8000/api/generateRestorePdf",
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -24,7 +26,7 @@ const GeneratePdf = ({ onClose }) => {
           start_date: startDate,
           end_date: endDate,
         },
-        responseType: 'blob', // Important for handling PDF response
+        responseType: "blob", // Important for handling PDF response
       });
 
       const blob = new Blob([response.data], { type: "application/pdf" });
@@ -62,7 +64,7 @@ const GeneratePdf = ({ onClose }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full text-center">
-        <h2 className="text-2xl font-bold mb-4">Cetak Laporan Peminjaman</h2>
+        <h2 className="text-2xl font-bold mb-4">Cetak Laporan Pengembalian</h2>
         <TextField
           label="Tanggal Awal"
           type="date"
