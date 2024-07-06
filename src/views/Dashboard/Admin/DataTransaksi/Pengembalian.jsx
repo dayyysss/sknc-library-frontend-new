@@ -109,33 +109,6 @@ const PengembalianCompo = () => {
     fetchDetail(id);
   };
 
-  const generatePdf = async () => {
-    try {
-      const token = getAuthToken();
-      if (!token) {
-        console.error("Token not available. Please login.");
-        return;
-      }
-
-      const response = await axios.get('http://127.0.0.1:8000/api/restore/generateRestorePdf', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        responseType: 'blob', // Important for handling PDF response
-      });
-
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'PengembalianReport.pdf'); // or any other extension
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-    }
-  };
-
   const handleDelete = async (id) => {
     try {
       const result = await Swal.fire({
@@ -250,7 +223,10 @@ const PengembalianCompo = () => {
     setIsGenerateModalOpen(true); // Open generate pdf modal
   };
 
-
+  const formatNumber = (num) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(num);
+  };
+  
   return (
     <LayoutAdmin>
       <div className="px-[25px] pt-[25px] pb-[370px] bg-[#F8F9FC]">
@@ -321,7 +297,7 @@ const PengembalianCompo = () => {
                         {pengembalian.status}
                       </span>
                     </TableCell>
-                    <TableCell className="table_cell">{pengembalian.fine}</TableCell>
+                    <TableCell className="table_cell">{formatNumber(pengembalian.fine)}</TableCell>
                     <TableCell className="table_cell">
                       <div className="flex items-center">
                         {pengembalian.status === "Menunggu" && (

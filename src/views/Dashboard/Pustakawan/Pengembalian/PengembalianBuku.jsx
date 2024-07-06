@@ -237,6 +237,10 @@ function PengembalianBuku({ type }) {
     }
   }; 
 
+  const formatNumber = (num) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(num);
+  };
+
   return (
     <div className="blog_page">
       <Sidebar />
@@ -312,7 +316,7 @@ function PengembalianBuku({ type }) {
                       {pengembalian.status}
                     </span>
                   </TableCell>
-                  <TableCell className="table_cell">{pengembalian.fine}</TableCell>
+                  <TableCell className="table_cell">{formatNumber(pengembalian.fine)}</TableCell>
                   <TableCell className="table_cell">
                     <div className="flex items-center">
                       {pengembalian.status === "Menunggu" && (
