@@ -17,6 +17,7 @@ import TextField from "@mui/material/TextField";
 import Swal from "sweetalert2";
 import { MdOutlineCheckBox } from "react-icons/md";
 import { FaFilePdf } from "react-icons/fa";
+import GeneratePdf from "../../../../views/Dashboard/GeneratePdfPeminjaman"
 
 const PeminjamanCompo = () => {
   const [books, setBooks] = useState([]);
@@ -25,10 +26,10 @@ const PeminjamanCompo = () => {
   const [totalBooks, setTotalBooks] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
   const [selectedBorrow, setSelectedBorrow] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false); 
 
   useEffect(() => {
     fetchData();
@@ -164,33 +165,6 @@ const PeminjamanCompo = () => {
     setIsAddModalOpen(false);
   };
 
-  const generatePdf = async () => {
-    try {
-      const token = getAuthToken();
-      if (!token) {
-        console.error("Token not available. Please login.");
-        return;
-      }
-
-      const response = await axios.get('http://127.0.0.1:8000/api/borrow/generateBorrowPdf', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        responseType: 'blob', // Important for handling PDF response
-      });
-
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'PeminjamanReport.pdf'); // or any other extension
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-    }
-  };
-
   const handleDelete = async (id) => {
     try {
       const result = await Swal.fire({
@@ -225,6 +199,10 @@ const PeminjamanCompo = () => {
     borrow.book.title.toLowerCase().includes(searchKeyword.toLowerCase())
   );
 
+  const handleGeneratePdfModalOpen = () => {
+    setIsGenerateModalOpen(true); // Open generate pdf modal
+  };
+
   return (
     <div className="px-[25px] pt-[25px] pb-[370px]">
       <div className="flex items-center justify-between mb-4">
@@ -243,11 +221,11 @@ const PeminjamanCompo = () => {
             onChange={handleSearchChange}
           />
           <button
-            onClick={generatePdf}
+            onClick={handleGeneratePdfModalOpen}
             className="bg-blue-500 text-white px-4 py-2 rounded mr-4 ml-4 flex items-center"
           >
             <FaFilePdf className="mr-2" />
-            Generate Peminjaman
+            Cetak Peminjaman
           </button>
           {/* <button
             onClick={openAddModal}
@@ -440,6 +418,23 @@ const PeminjamanCompo = () => {
           </div>
         </Fade>
       </Modal>
+       {/* Generate PDF Modal */}
+       <Modal
+          open={isGenerateModalOpen} // Use state to control modal open state
+          onClose={() => setIsGenerateModalOpen(false)} // Close modal function
+          aria-labelledby="generate-pdf-modal-title"
+          aria-describedby="generate-pdf-modal-description"
+          className="flex items-center justify-center"
+        >
+          <Fade in={isGenerateModalOpen}>
+            <div className="modal-content">
+              <GeneratePdf // Pass props to GeneratePdf component
+                data={filteredBorrow} // Pass data to GeneratePdf component
+                onClose={() => setIsGenerateModalOpen(false)} // Close modal function
+              />
+            </div>
+          </Fade>
+        </Modal>
     </div>
   );
 };

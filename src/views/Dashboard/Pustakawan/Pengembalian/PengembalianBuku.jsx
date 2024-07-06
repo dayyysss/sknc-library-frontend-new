@@ -23,6 +23,7 @@ import Fade from "@mui/material/Fade";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { RiCheckboxCircleFill } from "react-icons/ri";
 import { MdOutlineCheckBox } from "react-icons/md";
+import GeneratePdf from "../../GeneratePdfPengembalian"
 
 function PengembalianBuku({ type }) {
   document.title = "Skanic Library - Pengembalian Buku";
@@ -36,6 +37,7 @@ function PengembalianBuku({ type }) {
   const [selectedBorrow, setSelectedBorrow] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -109,33 +111,6 @@ function PengembalianBuku({ type }) {
 
   const handleDetailClick = (id) => {
     fetchDetail(id);
-  };
-
-  const generatePdf = async () => {
-    try {
-      const token = getAuthToken();
-      if (!token) {
-        console.error("Token not available. Please login.");
-        return;
-      }
-
-      const response = await axios.get('http://127.0.0.1:8000/api/restore/generateRestorePdf', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        responseType: 'blob', // Important for handling PDF response
-      });
-
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'PengembalianReport.pdf'); // or any other extension
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-    }
   };
 
   const handleDelete = async (id) => {
@@ -241,6 +216,10 @@ function PengembalianBuku({ type }) {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(num);
   };
 
+  const handleGeneratePdfModalOpen = () => {
+    setIsGenerateModalOpen(true); // Open generate pdf modal
+  };
+
   return (
     <div className="blog_page">
       <Sidebar />
@@ -265,11 +244,11 @@ function PengembalianBuku({ type }) {
             onChange={handleSearchChange}
           />
                     <button
-            onClick={generatePdf}
+            onClick={handleGeneratePdfModalOpen}
             className="bg-blue-500 text-white px-4 py-2 rounded mr-4 ml-4 flex items-center"
           >
             <FaFilePdf className="mr-2" />
-            Generate Pengembalian
+            Cetak Pengembalian
           </button>
           {/* <button
             onClick={openAddModal}
@@ -440,6 +419,22 @@ function PengembalianBuku({ type }) {
           </div>
         </Fade>
       </Modal>
+            {/* Generate PDF Modal */}
+            <Modal
+          open={isGenerateModalOpen} // Use state to control modal open state
+          onClose={() => setIsGenerateModalOpen(false)} // Close modal function
+          aria-labelledby="generate-pdf-modal-title"
+          aria-describedby="generate-pdf-modal-description"
+          className="flex items-center justify-center"
+        >
+          <Fade in={isGenerateModalOpen}>
+            <div className="modal-content">
+              <GeneratePdf // Pass props to GeneratePdf component
+                onClose={() => setIsGenerateModalOpen(false)} // Close modal function
+              />
+            </div>
+          </Fade>
+        </Modal>
     </div >
       </div>
     </div>

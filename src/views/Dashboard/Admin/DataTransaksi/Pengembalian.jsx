@@ -21,7 +21,7 @@ import AddPengembalian from "./AddPengembalian.jsx";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { RiCheckboxCircleFill } from "react-icons/ri";
 import LayoutAdmin from '../../../../layouts/Dashboard/AdminLayout'
-import GeneratePdf from "../GeneratePdfPengembalian.jsx"
+import GeneratePdf from "../../GeneratePdfPengembalian.jsx"
 
 const PengembalianCompo = () => {
   const [books, setBooks] = useState([]);

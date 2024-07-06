@@ -33,7 +33,7 @@ const GeneratePdf = ({ onClose }) => {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "LaporanPeminjamanBuku.pdf";
+      a.download = "LaporanPengembalianBuku.pdf";
       a.click();
       window.URL.revokeObjectURL(url);
       console.log(response.data); // Pastikan ini adalah blob yang valid
