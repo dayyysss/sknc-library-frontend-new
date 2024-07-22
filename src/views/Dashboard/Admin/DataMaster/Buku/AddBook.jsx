@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
+import LayoutAdmin from '../../../../../layouts/Dashboard/AdminLayout'
 
 const AddBook = () => {
   const [title, setTitle] = useState("");
@@ -93,6 +94,7 @@ const AddBook = () => {
   };
 
   return (
+    <LayoutAdmin>
     <div className="px-6 pt-6 bg-[#F8F9FC]">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-normal text-gray-700 mb-6">Tambah Data Buku</h1>
@@ -263,6 +265,7 @@ const AddBook = () => {
         </form>
       </div>
     </div>
+    </LayoutAdmin>
   );
 };
 
