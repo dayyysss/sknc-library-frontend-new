@@ -12,13 +12,10 @@ import AddUserModal from "./AddUser";
 import { PiMicrosoftExcelLogoLight, PiExportLight } from "react-icons/pi";
 import ImportExcel from "../../ImportExcel";
 import TextField from "@mui/material/TextField";
-import AdminLayout from '../../../../../layouts/Dashboard/AdminLayout';
-
 
 const ListUser = () => {
   document.title = "Dashboard Admin - Data User";
   const [books, setBooks] = useState([]);
-  const [query, setQuery] = useState("");
   const [role, setRole] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -208,7 +205,6 @@ const ListUser = () => {
 
   return (
     <>
-    <AdminLayout>
       <div className="min-h-screen px-[25px] pt-[25px] pb-[auto] bg-[#F8F9FC] overflow-auto">
         <div className="flex items-center justify-between">
           <h1 className="text-[28px] leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
@@ -377,7 +373,6 @@ const ListUser = () => {
           </div>
         </div>
       )}
-      </AdminLayout>
     </>
   );
 };

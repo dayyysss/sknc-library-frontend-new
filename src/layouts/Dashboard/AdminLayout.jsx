@@ -1,18 +1,18 @@
-// AdminLayout.jsx
 import React from 'react';
-import Sidebar from '../../components/Dashboard/Admin/SidebarAdmin';
+import { Outlet } from 'react-router-dom';
+import SidebarAdmin from '../../components/Dashboard/Admin/SidebarAdmin';
 import DashboardNav from '../../components/Dashboard/Admin/NavbarAdmin';
 import './style.css';
 
-const AdminLayout = ({ children }) => {
+const AdminLayout = () => {
   return (
-    <div className="flex overflow-scroll">
-      <div className="basis-[12%] h-[100vh]">
-        <Sidebar />
-      </div>
-      <div className="basis-[88%] border overflow-scroll h-[100vh]">
+    <div className="flex h-screen">
+      <SidebarAdmin />
+      <div className="flex-1">
         <DashboardNav />
-        {children}
+        <div className="p-4">
+          <Outlet /> {/* This will render the nested routes */}
+        </div>
       </div>
     </div>
   );

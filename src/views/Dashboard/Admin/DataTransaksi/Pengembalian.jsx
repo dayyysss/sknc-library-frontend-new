@@ -20,7 +20,6 @@ import { FaFilePdf } from "react-icons/fa";
 import AddPengembalian from "./AddPengembalian.jsx";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { RiCheckboxCircleFill } from "react-icons/ri";
-import LayoutAdmin from '../../../../layouts/Dashboard/AdminLayout'
 import GeneratePdf from "../../GeneratePdfPengembalian.jsx"
 
 const PengembalianCompo = () => {
@@ -228,7 +227,6 @@ const PengembalianCompo = () => {
   };
   
   return (
-    <LayoutAdmin>
       <div className="px-[25px] pt-[25px] pb-[370px] bg-[#F8F9FC]">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
@@ -438,7 +436,6 @@ const PengembalianCompo = () => {
           </Fade>
         </Modal>
       </div >
-    </LayoutAdmin>
   );
 };
 

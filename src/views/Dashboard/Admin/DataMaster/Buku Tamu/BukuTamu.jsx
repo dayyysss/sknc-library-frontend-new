@@ -5,7 +5,6 @@ import Chart from 'chart.js/auto';
 import { Button, Table, Pagination, Space, Select, Form, Input } from "antd";
 import { IoPeopleSharp } from "react-icons/io5";
 import UpdateTamu from './UpdateTamu';
-import AdminLayout from '../../../../../layouts/Dashboard/AdminLayout';
 
 const BukuTamu = () => {
   document.title = "Dashboard Admin - Buku Tamu";
@@ -205,7 +204,6 @@ const BukuTamu = () => {
 
   return (
     <>
-     <AdminLayout>
       <div className="min-h-screen px-[25px] pt-[25px] pb-[auto] bg-[#F8F9FC] overflow-auto">
         <div className="flex items-center justify-between">
           <h1 className="text-[28px] leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
@@ -316,7 +314,6 @@ const BukuTamu = () => {
           )}
         </div>
       </div>
-      </AdminLayout>
     </>
   );
 };

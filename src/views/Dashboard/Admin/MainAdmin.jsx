@@ -72,7 +72,6 @@ function MainAdmin() {
   }, []);
 
   return (
-    <AdminLayout>
       <div className="px-[25px] pt-[25px] bg-[#F8F9FC] pb-[40px]">
         <div className="flex items-center justify-between">
           <h1 className="text-[28px] leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
@@ -147,7 +146,6 @@ function MainAdmin() {
           </div>
         </div>
       </div>
-    </AdminLayout>
   );
 }
 

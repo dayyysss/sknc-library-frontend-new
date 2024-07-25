@@ -18,7 +18,6 @@ import Swal from "sweetalert2";
 import { MdOutlineCheckBox } from "react-icons/md";
 import { FaFilePdf } from "react-icons/fa";
 import AddPeminjaman from "./AddPengembalian";
-import LayoutAdmin from '../../../../layouts/Dashboard/AdminLayout'
 import GeneratePdf from "../../GeneratePdfPeminjaman"
 
 const PeminjamanCompo = () => {
@@ -205,8 +204,11 @@ const PeminjamanCompo = () => {
     borrow.book.title.toLowerCase().includes(searchKeyword.toLowerCase())
   );
 
+  const handleGeneratePdfModalClose = () => {
+    setIsGenerateModalOpen(false); // Close generate pdf modal
+  };
+
   return (
-    <LayoutAdmin>
       <div className="px-[25px] pt-[25px] pb-[370px] bg-[#F8F9FC]">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
@@ -424,7 +426,7 @@ const PeminjamanCompo = () => {
         {/* Generate PDF Modal */}
         <Modal
           open={isGenerateModalOpen} // Use state to control modal open state
-          onClose={() => setIsGenerateModalOpen(false)} // Close modal function
+          onClose={handleGeneratePdfModalClose} // Close modal function
           aria-labelledby="generate-pdf-modal-title"
           aria-describedby="generate-pdf-modal-description"
           className="flex items-center justify-center"
@@ -433,13 +435,12 @@ const PeminjamanCompo = () => {
             <div className="modal-content">
               <GeneratePdf // Pass props to GeneratePdf component
                 data={filteredBorrow} // Pass data to GeneratePdf component
-                onClose={() => setIsGenerateModalOpen(false)} // Close modal function
+                onClose={handleGeneratePdfModalClose} // Close modal function
               />
             </div>
           </Fade>
         </Modal>
       </div>
-    </LayoutAdmin>
   );
 };
 

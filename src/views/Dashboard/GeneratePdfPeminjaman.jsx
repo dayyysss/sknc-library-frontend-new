@@ -7,6 +7,11 @@ import Swal from "sweetalert2";
 const GeneratePdf = ({ onClose }) => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
+
+  const handleGeneratePdfModalClose = () => {
+    setIsGenerateModalOpen(false); // Close generate pdf modal
+  };
 
   const handleGenerate = async () => {
     try {
@@ -41,6 +46,8 @@ const GeneratePdf = ({ onClose }) => {
       Swal.fire({
         icon: "success",
         title: "PDF Berhasil Dibuat",
+      }).then(() => {
+        onClose(); // Tutup modal setelah swal sukses
       });
     } catch (error) {
       console.error("Error generating PDF:", error);
@@ -88,7 +95,8 @@ const GeneratePdf = ({ onClose }) => {
           margin="normal"
         />
         <div className="mt-4 flex justify-center space-x-4">
-          <Button variant="contained" color="primary" onClick={handleGenerate}>
+          <Button variant="contained" color="primary" onClick={handleGenerate}
+           onClose={handleGeneratePdfModalClose}>
             Generate PDF
           </Button>
           <Button variant="outlined" color="primary" onClick={onClose}>

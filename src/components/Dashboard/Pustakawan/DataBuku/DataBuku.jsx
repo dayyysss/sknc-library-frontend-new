@@ -14,7 +14,7 @@ import Swal from 'sweetalert2';
 import TextField from "@mui/material/TextField";
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
-import UpdateBook from './UpdateBook'; // Pastikan Anda mengimpor UpdateBook
+import UpdateBook from './UpdateBook'; 
 
 function DataBuku() {
     document.title = "Skanic Library - Data Buku";

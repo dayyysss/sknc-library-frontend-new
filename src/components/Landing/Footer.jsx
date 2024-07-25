@@ -75,7 +75,7 @@ const Footer = () => {
 
       <div className="text-center mt-4 mb-4">
         <p>
-          @copyright developed by
+        &copy; developed by
           <span className="text-brightGreen px-2">incredible inc</span>|
           All rights reserved
         </p>
