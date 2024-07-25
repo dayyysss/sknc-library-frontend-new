@@ -360,13 +360,13 @@ function DaftarBukuA() {
 
         {modalOpen && selectedBook && (
           <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto">
-            <div className="absolute inset-0 bg-black opacity-50"></div>
+            <div className="absolut inset-0 bg-black opacity-50"></div>
             <div className="z-50 bg-white p-8 rounded-lg max-w-lg w-full mx-4 flex">
               <div className="md:w-1/2 mr-4">
                 <img src={selectedBook.image} alt="Sampul Buku" className="w-full h-full object-fill mx-auto" />
               </div>
               <div className="w-2/3 flex flex-col">
-                <h2 className="text-xl font-bold mb-4">Detail Buku </h2>
+                <h2 className="text-xl font-bold mb-4 text-center">Detail Buku </h2>
                 <p className="text-left">Judul: {selectedBook.title}</p>
                 <p className="text-left">Sinopsis: {selectedBook.synopsis}</p>
                 <p className="text-left">Kategori: {selectedBook.category}</p>
