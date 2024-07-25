@@ -72,7 +72,7 @@ function MainAdmin() {
   }, []);
 
   return (
-      <div className="px-[25px] pt-[25px] bg-[#F8F9FC] pb-[40px]">
+      <div className="pt-[25px] bg-[#F8F9FC] pb-[40px] rounded-xl">
         <div className="flex items-center justify-between">
           <h1 className="text-[28px] leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
             Dashboard Admin

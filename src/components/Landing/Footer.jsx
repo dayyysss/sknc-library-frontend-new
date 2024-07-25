@@ -62,20 +62,16 @@ const Footer = () => {
             <span className="ml-3 text-xl">Skanic Library</span>
           </a>
         </div>
-        <iframe
-          title="Google Maps"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3964.1701229463045!2d106.82796461522198!3d-6.175392995494736!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f81e293eaf6f%3A0x539837f41db69925!2sMonumen%20Nasional%20%28Monas%29!5e0!3m2!1sen!2sid!4v1644700594639!5m2!1sen!2sid"
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d495.43617804818757!2d106.7584925349182!3d-6.585920900000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69c5457e0e3bcf%3A0x58481d58737539c0!2sSMK%20Negeri%201%20Ciomas!5e0!3m2!1sid!2sid!4v1721928072787!5m2!1sid!2sid" 
           width="400"
           height="100"
           style={{ border: 0, borderRadius: "10px" }}
           allowFullScreen=""
-          loading="lazy"
-        ></iframe>
+          loading="lazy"></iframe>
       </div>
-
       <div className="text-center mt-4 mb-4">
         <p>
-        &copy; developed by
+          &copy; developed by
           <span className="text-brightGreen px-2">incredible inc</span>|
           All rights reserved
         </p>

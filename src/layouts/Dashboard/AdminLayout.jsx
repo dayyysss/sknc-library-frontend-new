@@ -11,7 +11,7 @@ const AdminLayout = () => {
       <div className="flex-1">
         <DashboardNav />
         <div className="p-4">
-          <Outlet /> {/* This will render the nested routes */}
+          <Outlet />
         </div>
       </div>
     </div>
