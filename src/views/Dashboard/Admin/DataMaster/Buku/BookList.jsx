@@ -26,6 +26,7 @@ const BookList = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [isAddBookModalOpen, setIsAddBookModalOpen] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -90,7 +91,6 @@ const BookList = () => {
     }
   };
 
-  // Kemudian pada fungsi handleUpdate, buka modal edit
   const handleUpdate = (id) => {
     const selectedBook = books.find(book => book.id === id);
     if (selectedBook) {
@@ -131,7 +131,6 @@ const BookList = () => {
   };
 
   const handleImportExcel = () => {
-    // Ketika tombol "Import Excel" diklik, buka modal unggah Excel
     setIsImportModalOpen(true);
   };
 
@@ -145,46 +144,46 @@ const BookList = () => {
     )
     : books;
 
-    const exportAll = () => {
-      const token = localStorage.getItem("token");
-    
-      axios
-        .get("http://127.0.0.1:8000/api/allbook/export", {
-          responseType: "blob",
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        })
-        .then((response) => {
-          // Download the exported data
-          const url = window.URL.createObjectURL(new Blob([response.data]));
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = "formatbook.xlsx";
-          document.body.appendChild(a);
-          a.click();
-          window.URL.revokeObjectURL(url);
-          document.body.removeChild(a);
-  
-          // Show success alert
-          Swal.fire({
-            title: "Sukses!",
-            text: "Data Buku Berhasil DiExport!",
-            icon: "success",
-            confirmButtonText: "OK",
-          });
-        })
-        .catch((error) => {
-          // Show error alert
-          Swal.fire({
-            title: "Gagal!",
-            text: "Data Buku Gagal Di Export",
-            icon: "error",
-            confirmButtonText: "OK",
-          });
-          console.error("Export error:", error);
+  const exportAll = () => {
+    const token = localStorage.getItem("token");
+
+    axios
+      .get("http://127.0.0.1:8000/api/allbook/export", {
+        responseType: "blob",
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        // Download the exported data
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "formatbook.xlsx";
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+
+        // Show success alert
+        Swal.fire({
+          title: "Sukses!",
+          text: "Data Buku Berhasil DiExport!",
+          icon: "success",
+          confirmButtonText: "OK",
         });
-    };
+      })
+      .catch((error) => {
+        // Show error alert
+        Swal.fire({
+          title: "Gagal!",
+          text: "Data Buku Gagal Di Export",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+        console.error("Export error:", error);
+      });
+  };
 
   return (
     <>
@@ -194,9 +193,8 @@ const BookList = () => {
             Data Buku
           </h1>
           <div className="flex">
-            <Link
-              onClick={AddBook}
-              to="/dashboard-admin/buku/add-buku/*"
+          <Link
+              to="/dashboard-admin/buku/tambah-buku"
               className="bg-blue-500 h-[32px] rounded-[3px] text-white flex items-center justify-center px-[8px] mr-4"
             >
               Tambah Buku

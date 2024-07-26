@@ -44,7 +44,7 @@ function App() {
           <Route path="buku-tamu" element={<BukuTamu type="tamu" />} />
           <Route path="manajemen-user" element={<ManajemenUser type="user" />} />
           <Route path="buku" element={<ListBuku type="buku" />} />
-          <Route path="buku/add-buku" element={<TambahBuku type="buku" />} />
+          <Route path="buku/tambah-buku" element={<TambahBuku type="buku" />} />
           <Route path="peminjaman" element={<PeminjamanBuku type="peminjaman" />} />
           <Route path="pengembalian" element={<PengembalianBuku type="pengembalian" />} />
           <Route path="denda" element={<Denda type="denda" />} />

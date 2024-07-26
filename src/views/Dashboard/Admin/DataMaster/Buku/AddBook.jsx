@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
-import LayoutAdmin from '../../../../../layouts/Dashboard/AdminLayout'
 
 const AddBook = () => {
   const [title, setTitle] = useState("");

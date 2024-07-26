@@ -1,4 +1,3 @@
-// ImportExcel.jsx
 import React, { useRef, useEffect, useState } from 'react';
 import axios from "axios";
 import Swal from 'sweetalert2';
@@ -52,8 +51,9 @@ const ImportBook = ({ onClose, refreshData }) => {
 
       if (response.status === 200) {
         Swal.fire('Success', 'Data pengguna berhasil diimport!', 'success');
-        refreshData(); // Refresh data after successful import
-        onClose(); // Close the modal after successful import
+        console.log("refreshData:", refreshData);  // Debug log
+        refreshData(); 
+        onClose();
       } else {
         Swal.fire('Error', 'Import failed. Please try again.', 'error');
       }
