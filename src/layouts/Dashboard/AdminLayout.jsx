@@ -6,11 +6,11 @@ import './style.css';
 
 const AdminLayout = () => {
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen overflow-hidden">
       <SidebarAdmin />
-      <div className="flex-1">
+      <div className="flex-1 flex flex-col overflow-hidden">
         <DashboardNav />
-        <div className="p-4">
+        <div className="flex-1 overflow-y-auto p-4">
           <Outlet />
         </div>
       </div>

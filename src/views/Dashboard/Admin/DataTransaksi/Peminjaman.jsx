@@ -30,7 +30,7 @@ const PeminjamanCompo = () => {
   const [selectedBorrow, setSelectedBorrow] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
+  const [isGenerateModalOpen, setIsGenerateModalOpen] = React.useState(false);
 
   useEffect(() => {
     fetchData();
@@ -425,21 +425,20 @@ const PeminjamanCompo = () => {
         </Modal>
         {/* Generate PDF Modal */}
         <Modal
-          open={isGenerateModalOpen} // Use state to control modal open state
-          onClose={handleGeneratePdfModalClose} // Close modal function
-          aria-labelledby="generate-pdf-modal-title"
-          aria-describedby="generate-pdf-modal-description"
-          className="flex items-center justify-center"
-        >
-          <Fade in={isGenerateModalOpen}>
-            <div className="modal-content">
-              <GeneratePdf // Pass props to GeneratePdf component
-                data={filteredBorrow} // Pass data to GeneratePdf component
-                onClose={handleGeneratePdfModalClose} // Close modal function
-              />
-            </div>
-          </Fade>
-        </Modal>
+        open={isGenerateModalOpen}
+        onClose={handleGeneratePdfModalClose}
+        aria-labelledby="generate-pdf-modal-title"
+        aria-describedby="generate-pdf-modal-description"
+        className="flex items-center justify-center"
+      >
+        <Fade in={isGenerateModalOpen}>
+          <div className="modal-content">
+            <GeneratePdf
+              onClose={handleGeneratePdfModalClose}
+            />
+          </div>
+        </Fade>
+      </Modal>
       </div>
   );
 };
