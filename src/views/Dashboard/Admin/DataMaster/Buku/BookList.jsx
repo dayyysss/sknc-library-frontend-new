@@ -3,14 +3,16 @@ import { Link } from "react-router-dom";
 import Pagination from "@mui/material/Pagination";
 import Alert from '@mui/material/Alert';
 import Stack from "@mui/material/Stack";
+import { FiInfo } from "react-icons/fi";
 import axios from "axios";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { FaEdit } from "react-icons/fa";
 import Swal from "sweetalert2";
 import UpdateBook from "./UpdateBook";
-import { PiMicrosoftExcelLogoLight } from "react-icons/pi";
-import ImportExcel from "../../ImportExcel";
+import { PiMicrosoftExcelLogoLight, PiExportLight } from "react-icons/pi";
 import DetailBook from "./DetailBook"
+import ImportBook from "./ImportBook";
+import AddBook from "./AddBook"
 
 const BookList = () => {
   document.title = "Dashboard Admin - Data Buku";
@@ -19,9 +21,6 @@ const BookList = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [totalBooks, setTotalBooks] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isAddBookModalOpen, setIsAddBookModalOpen] = useState(false);
-  const [isEditFormOpen, setIsEditFormOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -146,6 +145,47 @@ const BookList = () => {
     )
     : books;
 
+    const exportAll = () => {
+      const token = localStorage.getItem("token");
+    
+      axios
+        .get("http://127.0.0.1:8000/api/allbook/export", {
+          responseType: "blob",
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          // Download the exported data
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "formatbook.xlsx";
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+  
+          // Show success alert
+          Swal.fire({
+            title: "Sukses!",
+            text: "Data Buku Berhasil DiExport!",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+        })
+        .catch((error) => {
+          // Show error alert
+          Swal.fire({
+            title: "Gagal!",
+            text: "Data Buku Gagal Di Export",
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+          console.error("Export error:", error);
+        });
+    };
+
   return (
     <>
       <div className="min-h-screen px-[25px] pt-[25px] pb-[auto] bg-[#F8F9FC] overflow-auto">
@@ -155,11 +195,19 @@ const BookList = () => {
           </h1>
           <div className="flex">
             <Link
+              onClick={AddBook}
               to="/dashboard-admin/buku/add-buku/*"
               className="bg-blue-500 h-[32px] rounded-[3px] text-white flex items-center justify-center px-[8px] mr-4"
             >
               Tambah Buku
             </Link>
+            <button
+              className="bg-slate-500 h-[32px] rounded-[3px] text-white flex items-center justify-center px-[8px] mr-4"
+              onClick={exportAll}
+            >
+              <PiExportLight className="text-xl mr-2" />
+              Export User
+            </button>
             <button
               onClick={handleImportExcel}
               className="bg-green-500 h-[32px] rounded-[3px] text-white flex items-center justify-center px-[8px]"
@@ -203,7 +251,7 @@ const BookList = () => {
                 </div>
                 <h3 className="text-lg font-semibold mb-2 mt-5">{book.title}</h3>
               </button>
-              <p className="text-gray-600 mb-2 flex-grow">{book.writer}</p>
+              <p className="text-gray-600 mb-2 flex-grow text-center">{book.writer}</p>
 
               <div className="flex justify-between items-center mt-2">
                 <div>
@@ -212,14 +260,23 @@ const BookList = () => {
                   </span>
                 </div>
                 <div className="flex space-x-2">
-                  <button onClick={() => handleBookClick(book.id)} className="text-green-500">
-                    Detail
+                  <button
+                    onClick={() => handleBookClick(book.id)}
+                    className="text-green-500 flex items-center"
+                  >
+                    <FiInfo className="mr-2" /> Detail
                   </button>
-                  <button onClick={() => handleUpdate(book.id)} className="text-blue-500">
-                    Edit
+                  <button
+                    onClick={() => handleUpdate(book.id)}
+                    className="text-blue-500 flex items-center"
+                  >
+                    <FaEdit className="mr-2" /> Edit
                   </button>
-                  <button onClick={() => handleDelete(book.id)} className="text-red-500">
-                    Hapus
+                  <button
+                    onClick={() => handleDelete(book.id)}
+                    className="text-red-500 flex items-center"
+                  >
+                    <RiDeleteBin5Line className="mr-2" /> Hapus
                   </button>
                 </div>
               </div>
@@ -259,7 +316,7 @@ const BookList = () => {
       {isImportModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <ImportExcel onClose={handleCloseImportModal} />
+            <ImportBook onClose={handleCloseImportModal} />
           </div>
         </div>
       )}

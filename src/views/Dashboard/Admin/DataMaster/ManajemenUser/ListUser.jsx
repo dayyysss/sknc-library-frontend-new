@@ -154,7 +154,6 @@ const ListUser = () => {
   };
 
   const handleImportExcel = () => {
-    // Ketika tombol "Import Excel" diklik, buka modal unggah Excel
     setIsImportModalOpen(true);
   };
 
