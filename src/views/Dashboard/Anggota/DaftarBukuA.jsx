@@ -14,7 +14,6 @@ import Button from "@mui/material/Button";
 
 import Pagination from "@mui/material/Pagination";
 import { Card } from 'antd';
-import LayoutAnggota from '../../../layouts/Dashboard/AnggotaLayout'
 
 function DaftarBukuA() {
   document.title = "Skanic Library - Daftar Buku";
@@ -175,7 +174,6 @@ function DaftarBukuA() {
 
   return (
     <>
-      <LayoutAnggota>
         <div className="px-[25px] pt-[25px] bg-white min-h-screen">
           <h1 className="text-[28px] leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
             Daftar Buku
@@ -407,7 +405,6 @@ function DaftarBukuA() {
             </div>
           </div>
         )}
-      </LayoutAnggota>
     </>
   );
 }

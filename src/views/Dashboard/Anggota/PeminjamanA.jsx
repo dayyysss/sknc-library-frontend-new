@@ -9,7 +9,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
-import LayoutAnggota from '../../../layouts/Dashboard/AnggotaLayout'
 
 const PeminjamanA = () => {
     document.title = "Skanic Library - Peminjaman Buku";
@@ -69,7 +68,6 @@ const PeminjamanA = () => {
     };
 
     return (
-        <LayoutAnggota>
         <div className="px-[25px] pt-[25px] bg-[#F8F9FC] pb-[500px]">
             <h1 className="text-[28px] leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
                 Buku Yang Di Pinjam
@@ -133,7 +131,6 @@ const PeminjamanA = () => {
                 </Table>
             </TableContainer>
         </div>
-        </LayoutAnggota>
     );
 };
 

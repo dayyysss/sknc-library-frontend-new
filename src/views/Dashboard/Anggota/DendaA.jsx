@@ -7,7 +7,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import axios from "axios";
-import LayoutAnggota from '../../../layouts/Dashboard/AnggotaLayout'
 
 const DendaA = () => {
     const [data, setData] = useState([]);
@@ -54,7 +53,6 @@ const DendaA = () => {
     };
 
     return (
-        <LayoutAnggota>
         <div className="px-[25px] pt-[25px] bg-[#F8F9FC] pb-[500px]">
             <h1 className="text-[28px] leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
                 Denda
@@ -91,7 +89,7 @@ const DendaA = () => {
                 </Table>
             </TableContainer>
         </div>
-        </LayoutAnggota>
+
     );
     
 };

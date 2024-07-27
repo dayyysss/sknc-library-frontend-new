@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { FaRegCalendarMinus } from "react-icons/fa";
 import Cookies from "js-cookie";
-import AnggotaLayout from '../../../layouts/Dashboard/AnggotaLayout'; 
 
 const Dashboard = () => {
   document.title = "Skanic Library - Dashboard";
@@ -20,7 +19,6 @@ const Dashboard = () => {
   }
 
   return (
-    <AnggotaLayout>
       <div className='px-[25px] pt-[25px] bg-[#F8F9FC] pb-[40px]'>
         <div className='flex items-center justify-between'>
           <h1 className='text-[28px] leading-[34px] font-normal text-[#5a5c69] cursor-pointer'>
@@ -34,7 +32,6 @@ const Dashboard = () => {
           <DashboardCard color="#F6C23E" count="400" title="LIHAT DENDA" /> */}
         </div>
       </div>
-    </AnggotaLayout>
   );
 };
 

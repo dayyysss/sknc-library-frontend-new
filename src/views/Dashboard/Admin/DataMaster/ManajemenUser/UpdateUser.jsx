@@ -120,7 +120,7 @@ const UpdateUser = ({ userId, onClose, user }) => {
         ref={modalRef}
         className="bg-white w-full max-w-md p-6 rounded-lg shadow-lg"
       >
-        <h2 className="text-2xl font-bold mb-4">Memperbarui Pengguna</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center">Memperbarui Pengguna</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <input

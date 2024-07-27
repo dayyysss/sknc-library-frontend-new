@@ -40,8 +40,7 @@ const AddUserModal = ({ onClose }) => {
         },
       };
       await axios.post("http://127.0.0.1:8000/api/user/create", formData, config);
-      onClose(); // Menutup modal setelah menambahkan pengguna
-      // Panggil Swal.fire() setelah data berhasil ditambahkan
+      onClose(); 
       Swal.fire({
         icon: "success",
         title: "Berhasil",
@@ -49,11 +48,10 @@ const AddUserModal = ({ onClose }) => {
       });
     } catch (error) {
       if (error.response && error.response.data && error.response.data.email) {
-        // Handle specific error: email already taken
         Swal.fire({
           icon: "error",
           title: "Gagal",
-          text: error.response.data.email[0], // Menampilkan pesan dari respons error
+          text: error.response.data.email[0], 
         });
       } else {
         // Handle other errors
@@ -83,7 +81,7 @@ const AddUserModal = ({ onClose }) => {
         ref={modalRef}
         className="bg-white w-full max-w-md p-6 rounded-lg shadow-lg"
       >
-        <h2 className="text-2xl font-bold mb-4">Tambah Pengguna</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center">Tambah Pengguna</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <input

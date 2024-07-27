@@ -1,3 +1,4 @@
+// App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Landing from './views/LandingPage/Landing';
@@ -28,7 +29,8 @@ import PeminjamanBukuA from './views/Dashboard/Anggota/PeminjamanA';
 import PengembalianBukuA from './views/Dashboard/Anggota/PengembalianA';
 import DendaA from './views/Dashboard/Anggota/DendaA';
 
-import AdminLayout from './layouts/Dashboard/AdminLayout'
+import AdminLayout from './layouts/Dashboard/AdminLayout';
+import AnggotaLayout from './layouts/Dashboard/AnggotaLayout';
 
 function App() {
   return (
@@ -60,7 +62,7 @@ function App() {
           <Route path="pengembalian-buku" element={<PengembalianBukuP type="pengembalian" />} />
         </Route>
 
-        <Route path="/dashboard-anggota" element={<MainAnggota />}>
+        <Route path="/dashboard-anggota" element={<AnggotaLayout />}>
           <Route index element={<MainAnggota />} />
           <Route path="daftar-buku" element={<DaftarBukuA type="buku" />} />
           <Route path="peminjaman-buku" element={<PeminjamanBukuA type="peminjaman" />} />
