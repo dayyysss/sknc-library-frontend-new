@@ -9,14 +9,7 @@ import "./BooksList.scss";
 
 function BooksList({ type }) {
   return (
-    <div className="list_page">
-      <div className="home_sidebar">
-        <Sidebar />
-      </div>
-
-      <div className="list_page_main">
-        <Navbar />
-
+    <>
         {/* mui data table */}
         <div className="data_table p-4">
      
@@ -49,8 +42,7 @@ function BooksList({ type }) {
 
           {type === "book" ? <DataTable /> : <TableList />}
         </div>
-      </div>
-    </div>
+        </>
   );
 }
 

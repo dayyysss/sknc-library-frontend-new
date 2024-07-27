@@ -31,6 +31,7 @@ import DendaA from './views/Dashboard/Anggota/DendaA';
 
 import AdminLayout from './layouts/Dashboard/AdminLayout';
 import AnggotaLayout from './layouts/Dashboard/AnggotaLayout';
+import PustakawanLayout from './layouts/Dashboard/PustakawanLayout'
 
 function App() {
   return (
@@ -52,14 +53,14 @@ function App() {
           <Route path="denda" element={<Denda type="denda" />} />
         </Route>
 
-        <Route path="/dashboard-pustakawan" element={<MainPustakawan />}>
+        <Route path="/dashboard-pustakawan" element={<PustakawanLayout />}>
           <Route index element={<MainPustakawan />} />
-          <Route path="buku-tamu" element={<BukuTamuP type="tamu" />} />
-          <Route path="data-buku" element={<DataBukuP type="buku" />} />
-          <Route path="data-buku/tambah-buku" element={<TambahBukuP type="buku" />} />
-          <Route path="data-buku/memperbarui-buku" element={<UpdateBukuP type="buku" />} />
-          <Route path="peminjaman-buku" element={<PeminjamanBukuP type="peminjaman" />} />
-          <Route path="pengembalian-buku" element={<PengembalianBukuP type="pengembalian" />} />
+          <Route path="buku-tamu" element={<BukuTamuP />} />
+          <Route path="data-buku" element={<DataBukuP />} />
+          <Route path="data-buku/tambah-buku" element={<TambahBukuP />} />
+          <Route path="data-buku/memperbarui-buku" element={<UpdateBukuP />} />
+          <Route path="peminjaman-buku" element={<PeminjamanBukuP />} />
+          <Route path="pengembalian-buku" element={<PengembalianBukuP />} />
         </Route>
 
         <Route path="/dashboard-anggota" element={<AnggotaLayout />}>

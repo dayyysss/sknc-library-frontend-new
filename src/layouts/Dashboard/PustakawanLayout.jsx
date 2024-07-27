@@ -1,0 +1,23 @@
+// PustakawanLayout.jsx
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import Sidebar from '../../components/Dashboard/Pustakawan/SidebarPustakawan';
+import Navbar from '../../components/Dashboard/Pustakawan/NavbarPustakawan';
+
+const PustakawanLayout = () => {
+  return (
+    <div className="home list_page">
+      <div className="home_sidebar">
+        <Sidebar />
+      </div>
+      <div className="home_main list_page_main">
+        <Navbar />
+        <div className="content">
+          <Outlet />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default PustakawanLayout;

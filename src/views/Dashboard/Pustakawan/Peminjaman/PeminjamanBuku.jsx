@@ -10,14 +10,7 @@ import './Peminjaman.scss';
 
 function PeminjamanBuku({ type }) {
     return (
-        <div className="list_page">
-            <div className="home_sidebar">
-                <Sidebar />
-            </div>
-
-            <div className="list_page_main">
-                <Navbar />
-
+<>
                 {/* mui data table */}
                 <div className="data_table">
                     <div className="btnn">
@@ -25,8 +18,8 @@ function PeminjamanBuku({ type }) {
 
                     {type === 'user' ? <DataTable /> : <PeminjamanBukuP />}
                 </div>
-            </div>
-        </div>
+
+</>
     );
 }
 

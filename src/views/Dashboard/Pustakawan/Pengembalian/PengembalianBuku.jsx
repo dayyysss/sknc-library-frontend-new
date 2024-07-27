@@ -221,11 +221,6 @@ function PengembalianBuku({ type }) {
   };
 
   return (
-    <div className="blog_page">
-      <Sidebar />
-
-      <div className="blog_page_main">
-        <Navbar />
 
         <div className="px-[25px] pt-[25px] pb-[370px]">
       <div className="flex items-center justify-between mb-4">
@@ -436,8 +431,6 @@ function PengembalianBuku({ type }) {
           </Fade>
         </Modal>
     </div >
-      </div>
-    </div>
   );
 }
 

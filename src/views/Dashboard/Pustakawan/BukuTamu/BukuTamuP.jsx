@@ -203,13 +203,6 @@ const BukuTamu = ({ type }) => {
   };  
 
   return (
-    <div className="list_page">
-      <div className="home_sidebar">
-        <Sidebar />
-      </div>
-
-      <div className="list_page_main">
-        <Navbar />
         <div className="min-h-screen px-[25px] pt-[25px] pb-[auto] overflow-auto">
           <div className="flex items-center justify-between">
             <h1 className="text-[28px] leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
@@ -320,8 +313,6 @@ const BukuTamu = ({ type }) => {
             )}
           </div>
         </div>
-      </div>
-    </div>
   );
 }
 
