@@ -12,7 +12,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false); // State untuk mengontrol tampilan modal
+  const [showModal, setShowModal] = useState(false);
 
   const handleRememberMeChange = () => {
     setRememberMe(!rememberMe);
@@ -28,7 +28,6 @@ const Login = () => {
         password,
       });
 
-      // Pengecekan apakah email dan password diisi
       if (!email || !password) {
         toast.error("Email dan password harus diisi", {
           position: "top-center",
@@ -38,13 +37,13 @@ const Login = () => {
       }
 
       if (response.data.success) {
-        const { roles, token, user_id, user } = response.data; // Ambil user dari response
+        const { roles, token, user_id, user } = response.data;
         localStorage.setItem("token", token);
-        localStorage.setItem("user_id", user_id); // Menyimpan user_id di localStorage
+        localStorage.setItem("user_id", user_id);
 
         // Simpan data ke cookies
         Cookies.set("token", token);
-        Cookies.set("name", JSON.stringify(user.name)); // Simpan nama user
+        Cookies.set("name", JSON.stringify(user.name));
         Cookies.set("roles", roles[0]);
 
         let redirectPath = "";
@@ -59,12 +58,10 @@ const Login = () => {
           return;
         }
 
-        // Menampilkan toast untuk login berhasil
         toast.success("Login Berhasil!", {
           position: "top-center",
         });
 
-        // Menunda pengalihan halaman ke dashboard dengan delay 2 detik
         setTimeout(() => {
           window.location.href = redirectPath;
         }, 2000);
@@ -90,7 +87,7 @@ const Login = () => {
   };
 
   const toggleModal = () => {
-    setShowModal(!showModal); // Mengubah nilai state untuk menampilkan atau menyembunyikan modal
+    setShowModal(!showModal);
   };
 
   useEffect(() => {
@@ -111,7 +108,7 @@ const Login = () => {
       toggleModal();
     }
   };
-  
+
 
   return (
     <div className="grid md:grid-cols-2 md:gap- place-items-center w-full min-h-screen">
@@ -163,7 +160,7 @@ const Login = () => {
               />
             </div>
 
-{/* 
+            {/* 
             <div className="flex items-center mt-4">
               <input
                 type="checkbox"

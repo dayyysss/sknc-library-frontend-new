@@ -86,9 +86,9 @@ const UpdateTamu = ({ userId, onClose, user, fetchData }) => {
         text: 'Data pengguna berhasil diperbarui!',
       });
 
-      resetForm(); // Reset form setelah berhasil update
+      resetForm();
       onClose();
-      fetchData(); // Panggil fungsi fetchData untuk memperbarui data setelah berhasil update
+      fetchData(); 
     } catch (error) {
       console.error("Error updating user:", error);
     }

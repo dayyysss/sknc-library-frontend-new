@@ -57,7 +57,6 @@ const DendaA = () => {
             <h1 className="text-[28px] leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
                 Denda
             </h1>
-    
             <TableContainer component={Paper} className="table_list mt-7">
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
@@ -89,7 +88,6 @@ const DendaA = () => {
                 </Table>
             </TableContainer>
         </div>
-
     );
     
 };

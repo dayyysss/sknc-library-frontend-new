@@ -24,7 +24,6 @@ const SidebarAdmin = () => {
           </h1>
           {!isSidebarOpen && <img src={logo} alt="Logo" className="h-12 w-12" />}
         </div>
-
         <NavLink
           to="/dashboard-admin"
           className={`flex items-center justify-between gap-[15px] py-[20px] border-[#EDEDED]/[0.3] ${activeSidebar}`}
@@ -36,7 +35,6 @@ const SidebarAdmin = () => {
           </div>
           {activeSidebar === 'dashboard' && isSidebarOpen && <FaChevronRight color='white' />}
         </NavLink>
-
         <NavLink
           to="/dashboard-admin/buku-tamu"
           className={`flex items-center justify-between gap-[15px] py-[20px] border-b-[1px] border-[#EDEDED]/[0.3] ${activeSidebar}`}
@@ -48,10 +46,8 @@ const SidebarAdmin = () => {
           </div>
           {activeSidebar === 'buku-tamu' && isSidebarOpen && <FaChevronRight color='white' />}
         </NavLink>
-
         <div className='pt-[15px] border-b-[1px] border-[#EDEDED]/[0.3]'>
           <p className={`text-[10px] font-extrabold leading-[16px] text-white/[0.4] ${isSidebarOpen ? 'block' : 'hidden'}`}>DATA MASTER</p>
-
           <NavLink
             to="/dashboard-admin/manajemen-user"
             className={`flex items-center justify-between gap-[10px] py-[15px] cursor-pointer ${activeSidebar}`}
@@ -63,7 +59,6 @@ const SidebarAdmin = () => {
             </div>
             {activeSidebar === 'user' && isSidebarOpen && <FaChevronRight color='white' />}
           </NavLink>
-
           <NavLink
             to="/dashboard-admin/buku"
             className={`flex items-center justify-between gap-[10px] py-[15px] cursor-pointer ${activeSidebar}`}
@@ -76,10 +71,8 @@ const SidebarAdmin = () => {
             {activeSidebar === 'buku' && isSidebarOpen && <FaChevronRight color='white' />}
           </NavLink>
         </div>
-
         <div className='pt-[15px] border-b-[1px] border-[#EDEDED]/[0.3]'>
           <p className={`text-[10px] font-extrabold leading-[16px] text-white/[0.4] ${isSidebarOpen ? 'block' : 'hidden'}`}>DATA TRANSAKSI</p>
-
           <NavLink
             to="/dashboard-admin/peminjaman"
             className={`flex items-center justify-between gap-[10px] py-[15px] cursor-pointer ${activeSidebar}`}
@@ -91,7 +84,6 @@ const SidebarAdmin = () => {
             </div>
             {activeSidebar === 'peminjaman' && isSidebarOpen && <FaChevronRight color='white' />}
           </NavLink>
-
           <NavLink
             to="/dashboard-admin/pengembalian"
             className={`flex items-center justify-between gap-[10px] py-[15px] cursor-pointer ${activeSidebar}`}
@@ -104,7 +96,6 @@ const SidebarAdmin = () => {
             {activeSidebar === 'pengembalian' && isSidebarOpen && <FaChevronRight color='white' />}
           </NavLink>
         </div>
-
         <div className='pt-[15px]'>
           <div className='flex items-center justify-center'>
             <div className='h-[40px] w-[40px] bg-[#3C5EC1] rounded-full flex items-center justify-center cursor-pointer' onClick={toggleSidebar}>

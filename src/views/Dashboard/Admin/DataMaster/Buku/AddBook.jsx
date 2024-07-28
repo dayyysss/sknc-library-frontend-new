@@ -97,7 +97,6 @@ const AddBook = () => {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-normal text-gray-700 mb-6">Tambah Data Buku</h1>
       </div>
-
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
           <div className="mb-4">

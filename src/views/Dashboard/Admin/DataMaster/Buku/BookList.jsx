@@ -12,7 +12,6 @@ import UpdateBook from "./UpdateBook";
 import { PiMicrosoftExcelLogoLight, PiExportLight } from "react-icons/pi";
 import DetailBook from "./DetailBook"
 import ImportBook from "./ImportBook";
-import AddBook from "./AddBook"
 
 const BookList = () => {
   document.title = "Dashboard Admin - Data Buku";
@@ -26,7 +25,6 @@ const BookList = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [isAddBookModalOpen, setIsAddBookModalOpen] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -95,7 +93,7 @@ const BookList = () => {
     const selectedBook = books.find(book => book.id === id);
     if (selectedBook) {
       setSelectedBook(selectedBook);
-      setIsEditModalOpen(true); // Buka modal edit
+      setIsEditModalOpen(true); 
     } else {
       console.error("Book not found!");
     }
@@ -107,10 +105,9 @@ const BookList = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    setSearchKeyword(query); // Set search keyword
+    setSearchKeyword(query); 
   };
 
-  // Pada fungsi handleBookClick, buka modal detail
   const handleBookClick = async (bookId) => {
     try {
       const response = await axios.get(
@@ -123,7 +120,7 @@ const BookList = () => {
       );
       if (response.data.success) {
         setSelectedBook(response.data.data);
-        setIsDetailModalOpen(true); // Buka modal detail
+        setIsDetailModalOpen(true);
       }
     } catch (error) {
       console.error(error);
@@ -155,7 +152,6 @@ const BookList = () => {
         },
       })
       .then((response) => {
-        // Download the exported data
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const a = document.createElement("a");
         a.href = url;
@@ -165,7 +161,6 @@ const BookList = () => {
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
 
-        // Show success alert
         Swal.fire({
           title: "Sukses!",
           text: "Data Buku Berhasil DiExport!",
@@ -174,7 +169,6 @@ const BookList = () => {
         });
       })
       .catch((error) => {
-        // Show error alert
         Swal.fire({
           title: "Gagal!",
           text: "Data Buku Gagal Di Export",

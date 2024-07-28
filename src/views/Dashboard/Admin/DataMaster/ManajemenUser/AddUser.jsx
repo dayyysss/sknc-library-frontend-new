@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import Swal from "sweetalert2"; // Import Swal dari SweetAlert2
+import Swal from "sweetalert2"; 
 
 const AddUserModal = ({ onClose }) => {
   const [formData, setFormData] = useState({
@@ -54,7 +54,6 @@ const AddUserModal = ({ onClose }) => {
           text: error.response.data.email[0], 
         });
       } else {
-        // Handle other errors
         console.error("Error adding user:", error);
       }
     }
@@ -63,7 +62,7 @@ const AddUserModal = ({ onClose }) => {
   const handleCloseModal = (e) => {
     if (modalRef.current && !modalRef.current.contains(e.target)) {
       onClose();
-      refreshData(); // Panggil fungsi refreshData setelah menutup modal
+      refreshData(); 
     }
   };  
 

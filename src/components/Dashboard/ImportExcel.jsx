@@ -52,8 +52,8 @@ const ImportExcel = ({ onClose, refreshData }) => {
 
       if (response.status === 200) {
         Swal.fire('Success', 'Data pengguna berhasil diimport!', 'success');
-        refreshData(); // Refresh data after successful import
-        onClose(); // Close the modal after successful import
+        refreshData();
+        onClose(); 
       } else {
         Swal.fire('Error', 'Import failed. Please try again.', 'error');
       }

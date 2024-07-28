@@ -36,7 +36,7 @@ const PengembalianA = () => {
                 }
             );
 
-            const responseData = response.data.data;  // Mengambil data yang benar dari respons
+            const responseData = response.data.data;
             setData(responseData);
             setLoading(false);
         } catch (error) {

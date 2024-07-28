@@ -11,16 +11,13 @@ function Sidebar() {
   const { pathname } = useLocation();
 
   const handleLogout = () => {
-    // Hapus token dari local storage
     localStorage.removeItem("token");
-    // Tampilkan pemberitahuan logout berhasil di tengah layar
     toast.success("Logout berhasil!", {
       position: "top-center",
     });
-    // Tunda pengalihan ke halaman login setelah 2 detik
     setTimeout(() => {
       window.location.href = "/";
-    }, 2000); // Ubah angka 2000 menjadi jumlah milidetik yang Anda inginkan
+    }, 2000); 
   };
 
   return (

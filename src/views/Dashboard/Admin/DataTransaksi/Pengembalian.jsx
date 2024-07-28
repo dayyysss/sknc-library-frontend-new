@@ -59,7 +59,7 @@ const PengembalianCompo = () => {
 
       if (response.data.success) {
         const { data, last_page, total } = response.data;
-        setBooks(data); // Mengatur data pengembalian
+        setBooks(data);
         setTotalPages(last_page);
         setTotalBooks(total);
       }
@@ -74,13 +74,13 @@ const PengembalianCompo = () => {
   };
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage + 1); // Ubah indeks halaman agar dimulai dari 1
+    setPage(newPage + 1); 
   };
 
   const handleChangeRowsPerPage = (event) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
     setRowsPerPage(newRowsPerPage);
-    setPage(1); // Set halaman kembali ke 1 saat jumlah baris per halaman diubah
+    setPage(1);
   };
 
   const handleSearchChange = (event) => {
@@ -162,7 +162,7 @@ const PengembalianCompo = () => {
           text: response.data.message,
         });
         if (typeof fetchData === 'function') {
-          fetchData(); // Ambil data baru setelah berhasil mengubah status denda
+          fetchData(); 
         } else {
           console.warn("fetchData is not a function");
         }
@@ -204,7 +204,7 @@ const PengembalianCompo = () => {
             title: "Status Pengembalian Berhasil",
             text: response.data.message,
           });
-          fetchData(); // Ambil data baru setelah berhasil mengubah status denda
+          fetchData();
         } else {
           throw new Error(response.data.message || "Terjadi kesalahan saat menambahkan pengembalian.");
         }
@@ -219,7 +219,7 @@ const PengembalianCompo = () => {
   };
 
   const handleGeneratePdfModalOpen = () => {
-    setIsGenerateModalOpen(true); // Open generate pdf modal
+    setIsGenerateModalOpen(true);
   };
 
   const formatNumber = (num) => {
@@ -350,7 +350,7 @@ const PengembalianCompo = () => {
           aria-labelledby="transition-modal-title"
           aria-describedby="transition-modal-description"
           open={isDetailModalOpen}
-          onClose={handleCloseDetailModal} // Close modal when clicking outside the modal area
+          onClose={handleCloseDetailModal} 
           closeAfterTransition
           BackdropComponent={Backdrop}
           BackdropProps={{
@@ -421,16 +421,16 @@ const PengembalianCompo = () => {
         </Modal>
         {/* Generate PDF Modal */}
         <Modal
-          open={isGenerateModalOpen} // Use state to control modal open state
-          onClose={() => setIsGenerateModalOpen(false)} // Close modal function
+          open={isGenerateModalOpen} 
+          onClose={() => setIsGenerateModalOpen(false)} 
           aria-labelledby="generate-pdf-modal-title"
           aria-describedby="generate-pdf-modal-description"
           className="flex items-center justify-center"
         >
           <Fade in={isGenerateModalOpen}>
             <div className="modal-content">
-              <GeneratePdf // Pass props to GeneratePdf component
-                onClose={() => setIsGenerateModalOpen(false)} // Close modal function
+              <GeneratePdf 
+                onClose={() => setIsGenerateModalOpen(false)}
               />
             </div>
           </Fade>

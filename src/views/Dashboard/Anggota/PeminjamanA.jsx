@@ -43,7 +43,7 @@ const PeminjamanA = () => {
                 }
             );
 
-            const dataPeminjaman = response.data.data; // Ambil data dari kunci 'data'
+            const dataPeminjaman = response.data.data;
             setData(dataPeminjaman);
         } catch (error) {
             console.error("Error fetching data:", error);

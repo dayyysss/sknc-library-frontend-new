@@ -95,7 +95,7 @@ const ListUser = () => {
   };
 
   const handleAddUser = () => {
-    setSelectedBook(null); // Set selected user to null to display AddUserModal
+    setSelectedBook(null); 
     setIsModalOpen(true);
   };
 
@@ -142,7 +142,7 @@ const ListUser = () => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    fetchData(); // Perbarui data setelah menutup modal
+    fetchData();
   };
 
   const handleCloseImportModal = () => {
@@ -168,7 +168,6 @@ const ListUser = () => {
         },
       })
       .then((response) => {
-        // Download the exported data
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const a = document.createElement("a");
         a.href = url;
@@ -178,7 +177,6 @@ const ListUser = () => {
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
 
-        // Show success alert
         Swal.fire({
           title: "Sukses!",
           text: "Data User Berhasil DiExport!",
@@ -187,7 +185,6 @@ const ListUser = () => {
         });
       })
       .catch((error) => {
-        // Show error alert
         Swal.fire({
           title: "Gagal!",
           text: "Data User Gagal Di Export",

@@ -48,7 +48,7 @@ const PeminjamanCompo = () => {
           Authorization: `Bearer ${token}`,
         },
         params: {
-          page: page, // Gunakan nilai page yang diatur sebelumnya
+          page: page, 
           per_page: rowsPerPage,
           q: searchKeyword,
         },
@@ -95,34 +95,26 @@ const PeminjamanCompo = () => {
   };
 
   const handleDetail = (borrow) => {
-    // Copy the selectedBorrow object to avoid mutating the original state
     const updatedBorrow = { ...borrow };
 
-    // Log the borrowing_start and borrowing_end values for debugging
     console.log("borrowing_start:", updatedBorrow.borrowing_start);
     console.log("borrowing_end:", updatedBorrow.borrowing_end);
 
-    // Convert date strings to Date objects (assuming format is "YYYY-MM-DD")
     const deadline = new Date(updatedBorrow.borrowing_end);
     const borrowingStart = new Date(updatedBorrow.borrowing_start);
 
-    // Check if the dates are valid
     if (isNaN(deadline.getTime()) || isNaN(borrowingStart.getTime())) {
       console.error("Invalid date value for borrowing_start or borrowing_end");
       return;
     }
 
-    // Calculate the current date
     const currentDate = new Date();
 
-    // Calculate the difference in days between the current date and the deadline
     const differenceInDays = Math.ceil((deadline - currentDate) / (1000 * 60 * 60 * 24));
 
-    // Adjust the deadline based on the difference
     const newDeadline = new Date(deadline);
     newDeadline.setDate(deadline.getDate() - differenceInDays);
 
-    // Save the adjusted deadline back to selectedBorrow
     updatedBorrow.deadline = newDeadline.toISOString().slice(0, 10);
 
     setSelectedBorrow(updatedBorrow);
@@ -135,13 +127,13 @@ const PeminjamanCompo = () => {
   };
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage + 1); // Ubah indeks halaman agar dimulai dari 1
+    setPage(newPage + 1); 
   };
 
   const handleChangeRowsPerPage = (event) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
     setRowsPerPage(newRowsPerPage);
-    setPage(1); // Set halaman kembali ke 1 saat jumlah baris per halaman diubah
+    setPage(1); 
   };
 
   const handleSearchChange = (event) => {
@@ -200,7 +192,7 @@ const PeminjamanCompo = () => {
   );
 
   const handleGeneratePdfModalOpen = () => {
-    setIsGenerateModalOpen(true); // Open generate pdf modal
+    setIsGenerateModalOpen(true); 
   };
 
   return (
@@ -316,7 +308,7 @@ const PeminjamanCompo = () => {
                 </TableCell>
               </TableRow>
             ))}
-            {books.length === 0 && ( // Tambahkan kondisi untuk menampilkan pesan jika tidak ada data
+            {books.length === 0 && (
               <TableRow>
                 <TableCell colSpan={8} className="text-center">
                   Tidak ada data peminjaman.
@@ -348,7 +340,7 @@ const PeminjamanCompo = () => {
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={isDetailModalOpen}
-        onClose={handleCloseDetailModal} // Close modal when clicking outside the modal area
+        onClose={handleCloseDetailModal} 
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
@@ -420,17 +412,17 @@ const PeminjamanCompo = () => {
       </Modal>
        {/* Generate PDF Modal */}
        <Modal
-          open={isGenerateModalOpen} // Use state to control modal open state
-          onClose={() => setIsGenerateModalOpen(false)} // Close modal function
+          open={isGenerateModalOpen}
+          onClose={() => setIsGenerateModalOpen(false)} 
           aria-labelledby="generate-pdf-modal-title"
           aria-describedby="generate-pdf-modal-description"
           className="flex items-center justify-center"
         >
           <Fade in={isGenerateModalOpen}>
             <div className="modal-content">
-              <GeneratePdf // Pass props to GeneratePdf component
-                data={filteredBorrow} // Pass data to GeneratePdf component
-                onClose={() => setIsGenerateModalOpen(false)} // Close modal function
+              <GeneratePdf
+                data={filteredBorrow} 
+                onClose={() => setIsGenerateModalOpen(false)} 
               />
             </div>
           </Fade>

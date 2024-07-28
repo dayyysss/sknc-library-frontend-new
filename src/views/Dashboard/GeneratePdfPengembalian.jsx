@@ -26,7 +26,7 @@ const GeneratePdf = ({ onClose }) => {
           start_date: startDate,
           end_date: endDate,
         },
-        responseType: "blob", // Important for handling PDF response
+        responseType: "blob", 
       });
 
       const blob = new Blob([response.data], { type: "application/pdf" });
@@ -36,7 +36,7 @@ const GeneratePdf = ({ onClose }) => {
       a.download = "LaporanPengembalianBuku.pdf";
       a.click();
       window.URL.revokeObjectURL(url);
-      console.log(response.data); // Pastikan ini adalah blob yang valid
+      console.log(response.data);
 
       Swal.fire({
         icon: "success",

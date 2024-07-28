@@ -15,12 +15,7 @@ import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import BookIcon from "@mui/icons-material/Book";
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
-
-
-// import sass file
 import "./navbar.scss";
-
-// import images
 import admin from "../../../assets/images/admin_pic.jpg";
 import { toast } from "react-hot-toast";
 
@@ -33,20 +28,17 @@ function Navbar() {
   };
 
   const handleLogout = () => {
-    // Hapus token dari local storage
     localStorage.removeItem("token");
-    // Tampilkan pemberitahuan logout berhasil di tengah layar
     toast.success("Logout berhasil!", {
       position: "top-center",
     });
-    // Tunda pengalihan ke halaman login setelah 2 detik
     setTimeout(() => {
       window.location.href = "/";
-    }, 2000); // Ubah angka 2000 menjadi jumlah milidetik yang Anda inginkan
+    }, 2000); 
   };
 
   const toggleProfileDropdown = () => {
-    setShowProfileDropdown(!showProfileDropdown); // Toggle state untuk menampilkan atau menyembunyikan dropdown profil
+    setShowProfileDropdown(!showProfileDropdown); 
   };
 
   return (
@@ -106,9 +98,9 @@ function Navbar() {
                 className="admin_pic"
                 src={admin}
                 alt="admin"
-                onClick={toggleProfileDropdown} // Menambahkan event onClick untuk menampilkan dropdown profil saat gambar admin diklik
+                onClick={toggleProfileDropdown}
               />
-              {showProfileDropdown && ( // Menampilkan dropdown profil jika showProfileDropdown bernilai true
+              {showProfileDropdown && ( 
                 <div className='bg-white border h-[45px] w-[120px] absolute bottom-[-50px] z-20 right-0 pt-[8px] space-y-[10px] text-center'>
                   <ul>
                     <li onClick={handleLogout} className="cursor-pointer hover:text-red-500">Keluar</li>

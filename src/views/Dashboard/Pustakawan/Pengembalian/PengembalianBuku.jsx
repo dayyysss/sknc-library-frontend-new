@@ -1,9 +1,5 @@
-import { DataGrid } from '@mui/x-data-grid';
 import React, { useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
 import Paper from "@mui/material/Paper";
-import Navbar from '../../../../components/Dashboard/Pustakawan/NavbarPustakawan';
-import Sidebar from '../../../../components/Dashboard/Pustakawan/SidebarPustakawan';
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -27,7 +23,7 @@ import GeneratePdf from "../../GeneratePdfPengembalian"
 
 function PengembalianBuku({ type }) {
   document.title = "Skanic Library - Pengembalian Buku";
-  
+
   const [books, setBooks] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -64,7 +60,7 @@ function PengembalianBuku({ type }) {
 
       if (response.data.success) {
         const { data, last_page, total } = response.data;
-        setBooks(data); // Mengatur data pengembalian
+        setBooks(data);
         setTotalPages(last_page);
         setTotalBooks(total);
       }
@@ -72,20 +68,20 @@ function PengembalianBuku({ type }) {
       console.error(error);
     }
   };
-  
+
   const handleCloseDetailModal = () => {
     setSelectedBorrow(null);
     setIsDetailModalOpen(false);
   };
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage + 1); // Ubah indeks halaman agar dimulai dari 1
+    setPage(newPage + 1);
   };
 
   const handleChangeRowsPerPage = (event) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
     setRowsPerPage(newRowsPerPage);
-    setPage(1); // Set halaman kembali ke 1 saat jumlah baris per halaman diubah
+    setPage(1);
   };
 
   const handleSearchChange = (event) => {
@@ -180,10 +176,8 @@ function PengembalianBuku({ type }) {
         console.error("Token not available. Please login.");
         return;
       }
-  
-      // Periksa apakah status adalah "Denda Belum Dibayar"
+
       if (status === "Denda Belum Dibayar") {
-        // Kirim permintaan ke API untuk memperbarui status menjadi "Denda Dibayar"
         const response = await axios.put(
           `http://127.0.0.1:8000/api/restore/${id}/update-fine`,
           { status: "Denda Dibayar" },
@@ -193,9 +187,8 @@ function PengembalianBuku({ type }) {
             },
           }
         );
-  
+
         if (response.data.success) {
-          // Jika berhasil, perbarui data pengembalian
           fetchData();
           Swal.fire({
             title: "Success!",
@@ -204,25 +197,23 @@ function PengembalianBuku({ type }) {
           });
         }
       } else {
-        // Jika status bukan "Denda Belum Dibayar", lakukan hal lain (misalnya, perbarui status lain)
-        // Anda dapat menambahkan logika ini sesuai kebutuhan
       }
     } catch (error) {
       console.error("Error updating status:", error);
     }
-  }; 
+  };
 
   const formatNumber = (num) => {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(num);
   };
 
   const handleGeneratePdfModalOpen = () => {
-    setIsGenerateModalOpen(true); // Open generate pdf modal
+    setIsGenerateModalOpen(true);
   };
 
   return (
 
-        <div className="px-[25px] pt-[25px] pb-[370px]">
+    <div className="px-[25px] pt-[25px] pb-[370px]">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
           <h1 className="text-[28px] leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
@@ -238,7 +229,7 @@ function PengembalianBuku({ type }) {
             value={searchQuery}
             onChange={handleSearchChange}
           />
-                    <button
+          <button
             onClick={handleGeneratePdfModalOpen}
             className="bg-blue-500 text-white px-4 py-2 rounded mr-4 ml-4 flex items-center"
           >
@@ -345,7 +336,7 @@ function PengembalianBuku({ type }) {
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={isDetailModalOpen}
-        onClose={handleCloseDetailModal} // Close modal when clicking outside the modal area
+        onClose={handleCloseDetailModal}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
@@ -414,22 +405,22 @@ function PengembalianBuku({ type }) {
           </div>
         </Fade>
       </Modal>
-            {/* Generate PDF Modal */}
-            <Modal
-          open={isGenerateModalOpen} // Use state to control modal open state
-          onClose={() => setIsGenerateModalOpen(false)} // Close modal function
-          aria-labelledby="generate-pdf-modal-title"
-          aria-describedby="generate-pdf-modal-description"
-          className="flex items-center justify-center"
-        >
-          <Fade in={isGenerateModalOpen}>
-            <div className="modal-content">
-              <GeneratePdf // Pass props to GeneratePdf component
-                onClose={() => setIsGenerateModalOpen(false)} // Close modal function
-              />
-            </div>
-          </Fade>
-        </Modal>
+      {/* Generate PDF Modal */}
+      <Modal
+        open={isGenerateModalOpen} // Use state to control modal open state
+        onClose={() => setIsGenerateModalOpen(false)} // Close modal function
+        aria-labelledby="generate-pdf-modal-title"
+        aria-describedby="generate-pdf-modal-description"
+        className="flex items-center justify-center"
+      >
+        <Fade in={isGenerateModalOpen}>
+          <div className="modal-content">
+            <GeneratePdf // Pass props to GeneratePdf component
+              onClose={() => setIsGenerateModalOpen(false)} // Close modal function
+            />
+          </div>
+        </Fade>
+      </Modal>
     </div >
   );
 }

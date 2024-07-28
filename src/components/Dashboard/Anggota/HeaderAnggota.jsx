@@ -23,30 +23,23 @@ function Header() {
             throw new Error('Logout failed');
         }
 
-        // Hapus token dari local storage
         localStorage.removeItem("token");
-        
-        // Hapus cookies "name", "roles", dan "token"
         document.cookie = "name=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         document.cookie = "roles=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         
-        // Tampilkan pemberitahuan logout berhasil di tengah layar
         toast.success("Logout berhasil!", {
             position: "top-center",
         });
-        
-        // Tunda pengalihan ke halaman login setelah 2 detik
         setTimeout(() => {
             window.location.href = "/";
-        }, 2000); // Ubah angka 2000 menjadi jumlah milidetik yang Anda inginkan
+        }, 2000);
     } catch (error) {
         toast.error("Logout gagal!", {
             position: "top-center",
         });
     }
 };
-
 
   return (
     <div className="block md:flex items-center justify-between px-8 py-3 bg-neutral-50 mb-2">

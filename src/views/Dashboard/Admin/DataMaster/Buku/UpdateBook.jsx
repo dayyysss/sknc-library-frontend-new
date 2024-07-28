@@ -18,7 +18,6 @@ const UpdateBook = ({ book, onClose, fetchBooks }) => {
   const navigate = useNavigate();
   const modalRef = useRef();
 
-  // Inisialisasi state dengan nilai buku saat komponen diinisialisasi
   useEffect(() => {
     if (book) {
       setTitle(book.title || "");
@@ -68,8 +67,8 @@ const UpdateBook = ({ book, onClose, fetchBooks }) => {
           icon: "success",
           confirmButtonText: "OK"
         }).then(() => {
-          fetchBooks(); // Memanggil fungsi untuk refresh data buku
-          onClose(); // Menutup modal setelah sukses
+          fetchBooks(); 
+          onClose(); 
         });
       } else {
         Swal.fire({

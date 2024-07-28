@@ -51,7 +51,7 @@ const ImportBook = ({ onClose, refreshData }) => {
 
       if (response.status === 200) {
         Swal.fire('Success', 'Data pengguna berhasil diimport!', 'success');
-        console.log("refreshData:", refreshData);  // Debug log
+        console.log("refreshData:", refreshData); 
         refreshData(); 
         onClose();
       } else {

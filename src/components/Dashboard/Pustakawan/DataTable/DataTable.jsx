@@ -8,8 +8,8 @@ function DataTable() {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const [totalBooks, setTotalBooks] = useState(0);
-    const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
-    const [selectedBook, setSelectedBook] = useState(null); // State to hold selected book for editing
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedBook, setSelectedBook] = useState(null); 
   
     useEffect(() => {
       fetchData();
@@ -75,8 +75,8 @@ function DataTable() {
     };
   
     const handleUpdate = async (bookId) => {
-      setIsModalOpen(true); // Open modal
-      setSelectedBook(bookId); // Set selected book for editing
+      setIsModalOpen(true);
+      setSelectedBook(bookId); 
     };
   
     const handleChangePage = (event, value) => {

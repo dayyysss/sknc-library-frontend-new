@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import Navbar from '../../../../components/Dashboard/Pustakawan/NavbarPustakawan';
-import Sidebar from '../../../../components/Dashboard/Pustakawan/SidebarPustakawan';
 import axios from "axios";
 import Swal from "sweetalert2";
 import Chart from 'chart.js/auto';
@@ -33,7 +31,7 @@ const BukuTamu = ({ type }) => {
 
   useEffect(() => {
     nameInputRef.current && nameInputRef.current.focus();
-  }, []);  
+  }, []);
 
   const fetchGuestsToday = async () => {
     try {
@@ -200,119 +198,115 @@ const BukuTamu = ({ type }) => {
 
   const handleAddGuest = () => {
     identityRef.current.scrollIntoView({ behavior: "smooth" });
-  };  
+  };
 
   return (
-        <div className="min-h-screen px-[25px] pt-[25px] pb-[auto] overflow-auto">
-          <div className="flex items-center justify-between">
-            <h1 className="text-[28px] leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
-              Buku Tamu
-            </h1>
-          </div>
-
-          <div ref={identityRef} className="mt-8 flex space-x-8">
-            <div className="w-1/2 bg-white p-4 rounded-md shadow-md">
-              <h1 className="font-semibold mb-4 text-xl text-center">Tambah Identitas Pengunjung</h1>
-              <Form form={form} onFinish={handleSubmit}>
-                <Form.Item name="name" rules={[{ required: true, message: 'Nama Pengunjung harus diisi!' }]}>
-                  <Input placeholder="Nama Pengunjung" />
-                </Form.Item>
-                <Form.Item name="class">
-                  <Input placeholder="Kelas" />
-                </Form.Item>
-                <Form.Item name="departemen">
-                  <Input placeholder="Jurusan" />
-                </Form.Item>
-                <Form.Item name="email" rules={[{ type: 'email', message: 'Email tidak valid!' }]}>
-                  <Input placeholder="Email" />
-                </Form.Item>
-                <Form.Item name="goals">
-                  <Select
-                    placeholder="Pilih Tujuan"
-                    options={goalOptions}
-                    onChange={handleGoalChange}
-                  />
-                </Form.Item>
-                <Form.Item name="telp">
-                  <Input placeholder="No Handphone" />
-                </Form.Item>
-                <div className="flex justify-end">
-                  <Button type="primary" htmlType="submit" className="w-full bg-blue-500">
-                    Simpan Data
-                  </Button>
-                </div>
-              </Form>
-            </div>
-
-            <div className="w-1/2 bg-white p-4 rounded-md shadow-md">
-              <h2 className="text-xl font-semibold mb-4 text-center">Statistik Pengunjung</h2>
-              <div className="grid grid-cols-2 gap-4">
-                <canvas ref={chartRef}></canvas>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-8 bg-white p-4 rounded-md shadow-md">
-            <h1 className="text-2xl text-start font-semibold mb-4 text-blue-400 flex items-center">
-              <IoPeopleSharp className="mr-2 text-blue-400" /> Daftar Tamu
-            </h1>
-            
-            <div className="flex items-center mb-4">
-              <Input 
-                type="text" 
-                placeholder="Cari data tamu berdasarkan nama..." 
-                value={searchKeyword} 
-                onChange={(e) => setSearchKeyword(e.target.value)} 
-                className="border p-2 rounded-md mr-10" 
+    <div className="min-h-screen px-[25px] pt-[25px] pb-[auto] overflow-auto">
+      <div className="flex items-center justify-between">
+        <h1 className="text-[28px] leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
+          Buku Tamu
+        </h1>
+      </div>
+      <div ref={identityRef} className="mt-8 flex space-x-8">
+        <div className="w-1/2 bg-white p-4 rounded-md shadow-md">
+          <h1 className="font-semibold mb-4 text-xl text-center">Tambah Identitas Pengunjung</h1>
+          <Form form={form} onFinish={handleSubmit}>
+            <Form.Item name="name" rules={[{ required: true, message: 'Nama Pengunjung harus diisi!' }]}>
+              <Input placeholder="Nama Pengunjung" />
+            </Form.Item>
+            <Form.Item name="class">
+              <Input placeholder="Kelas" />
+            </Form.Item>
+            <Form.Item name="departemen">
+              <Input placeholder="Jurusan" />
+            </Form.Item>
+            <Form.Item name="email" rules={[{ type: 'email', message: 'Email tidak valid!' }]}>
+              <Input placeholder="Email" />
+            </Form.Item>
+            <Form.Item name="goals">
+              <Select
+                placeholder="Pilih Tujuan"
+                options={goalOptions}
+                onChange={handleGoalChange}
               />
-              <div className="flex justify-end flex-grow">
-                <div className="flex items-center gap-2">
-                  <Button
-                    type="primary"
-                    onClick={handleAddGuest}
-                    className="bg-blue-500"
-                  >
-                    Tambah Tamu
-                  </Button>
-                </div>
-              </div>
+            </Form.Item>
+            <Form.Item name="telp">
+              <Input placeholder="No Handphone" />
+            </Form.Item>
+            <div className="flex justify-end">
+              <Button type="primary" htmlType="submit" className="w-full bg-blue-500">
+                Simpan Data
+              </Button>
             </div>
-            <Table
-              dataSource={filteredGuests.map((guest, index) => ({
-                ...guest,
-                key: (page - 1) * pageSize + index + 1,
-              }))}
-              pagination={false}
-            >
-              <Table.Column title="No" dataIndex="key" />
-              <Table.Column title="Nama Pengunjung" dataIndex="name" />
-              <Table.Column title="Kelas" dataIndex="class" />
-              <Table.Column title="Jurusan" dataIndex="departemen" />
-              <Table.Column title="Email" dataIndex="email" />
-              <Table.Column title="Tujuan" dataIndex="goals" />
-              <Table.Column title="No Handphone" dataIndex="telp" />
-              <Table.Column
-                title="Aksi"
-                render={(text, record) => (
-                  <Space>
-                    <Button type="primary" shape="round" className="bg-blue-500" onClick={() => handleEdit(record.id)}>Edit</Button>
-                    <Button danger shape="round" onClick={() => handleDelete(record.id)}>Delete</Button>
-                  </Space>
-                )}
-              />
-            </Table>
-            <Pagination
-              className="mt-5"
-              current={page}
-              total={totalGuests}
-              pageSize={pageSize}
-              onChange={(page) => setPage(page)}
-            />
-            {isModalOpen && (
-              <UpdateTamu userId={selectedGuestId} onClose={() => setIsModalOpen(false)} />
-            )}
+          </Form>
+        </div>
+        <div className="w-1/2 bg-white p-4 rounded-md shadow-md">
+          <h2 className="text-xl font-semibold mb-4 text-center">Statistik Pengunjung</h2>
+          <div className="grid grid-cols-2 gap-4">
+            <canvas ref={chartRef}></canvas>
           </div>
         </div>
+      </div>
+      <div className="mt-8 bg-white p-4 rounded-md shadow-md">
+        <h1 className="text-2xl text-start font-semibold mb-4 text-blue-400 flex items-center">
+          <IoPeopleSharp className="mr-2 text-blue-400" /> Daftar Tamu
+        </h1>
+        <div className="flex items-center mb-4">
+          <Input
+            type="text"
+            placeholder="Cari data tamu berdasarkan nama..."
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            className="border p-2 rounded-md mr-10"
+          />
+          <div className="flex justify-end flex-grow">
+            <div className="flex items-center gap-2">
+              <Button
+                type="primary"
+                onClick={handleAddGuest}
+                className="bg-blue-500"
+              >
+                Tambah Tamu
+              </Button>
+            </div>
+          </div>
+        </div>
+        <Table
+          dataSource={filteredGuests.map((guest, index) => ({
+            ...guest,
+            key: (page - 1) * pageSize + index + 1,
+          }))}
+          pagination={false}
+        >
+          <Table.Column title="No" dataIndex="key" />
+          <Table.Column title="Nama Pengunjung" dataIndex="name" />
+          <Table.Column title="Kelas" dataIndex="class" />
+          <Table.Column title="Jurusan" dataIndex="departemen" />
+          <Table.Column title="Email" dataIndex="email" />
+          <Table.Column title="Tujuan" dataIndex="goals" />
+          <Table.Column title="No Handphone" dataIndex="telp" />
+          <Table.Column
+            title="Aksi"
+            render={(text, record) => (
+              <Space>
+                <Button type="primary" shape="round" className="bg-blue-500" onClick={() => handleEdit(record.id)}>Edit</Button>
+                <Button danger shape="round" onClick={() => handleDelete(record.id)}>Delete</Button>
+              </Space>
+            )}
+          />
+        </Table>
+        <Pagination
+          className="mt-5"
+          current={page}
+          total={totalGuests}
+          pageSize={pageSize}
+          onChange={(page) => setPage(page)}
+        />
+        {isModalOpen && (
+          <UpdateTamu userId={selectedGuestId} onClose={() => setIsModalOpen(false)} />
+        )}
+      </div>
+    </div>
   );
 }
 

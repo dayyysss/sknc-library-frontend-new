@@ -5,16 +5,16 @@ import Cookies from "js-cookie";
 
 const Dashboard = () => {
   document.title = "Skanic Library - Dashboard";
-  const [nameData, setNameData] = useState(""); // Menggunakan 'nameData' sebagai state
+  const [nameData, setNameData] = useState(""); 
 
   useEffect(() => {
     loadName();
   }, []);
 
   const loadName = () => {
-    const nameData = Cookies.get("name"); // Mengambil data dari cookie dengan kunci 'name'
+    const nameData = Cookies.get("name"); 
     if (nameData) {
-      setNameData(JSON.parse(nameData)); // Parsing JSON dan mengatur state
+      setNameData(JSON.parse(nameData));
     }
   }
 

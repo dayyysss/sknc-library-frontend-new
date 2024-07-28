@@ -10,7 +10,7 @@ const AddPengembalian = ({ closeModal, fetchData }) => {
   const [userName, setUserName] = useState('');
   const modalRef = useRef(null);
 
-  const token = localStorage.getItem('token'); // Asumsikan token disimpan di localStorage
+  const token = localStorage.getItem('token'); 
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -36,7 +36,6 @@ const AddPengembalian = ({ closeModal, fetchData }) => {
         });
         const borrowData = response.data;
 
-        // Contoh: Mengambil detail buku dan pengguna dari response
         setBookTitle(borrowData.book.title);
         setUserName(borrowData.user.name);
       } catch (error) {

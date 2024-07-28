@@ -11,19 +11,19 @@ const Register = ({ title }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password_confirmation, setConfirmPassword] = useState("");
-  const [nisn, setNisn] = useState(""); // Tambahkan state untuk NISN
-  const [isLoading, setIsLoading] = useState(false); // Loading state
+  const [nisn, setNisn] = useState(""); 
+  const [isLoading, setIsLoading] = useState(false); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true); // Set isLoading true saat mulai proses registrasi
+    setIsLoading(true); 
 
     // Validasi password
     if (password !== password_confirmation) {
       toast.error("Password dan konfirmasi tidak sesuai!", {
         position:"top-center"
       });
-      setIsLoading(false); // Set isLoading false setelah validasi gagal
+      setIsLoading(false); 
       return;
     }
 
@@ -34,33 +34,29 @@ const Register = ({ title }) => {
         password,
         password_confirmation,
         nisn,
-        roles: ["anggota"], // Kirim nilai 'roles' sebagai array yang berisi 'anggota'
+        roles: ["anggota"], 
       });
 
       if (response.data.success) {
-        // Menampilkan toast "Register Berhasil!"
         toast.success("Daftar Berhasil!", {
-          position: "top-center", // Menempatkan toast di tengah atas layar
+          position: "top-center", 
         });
         
-        // Menunda pengalihan halaman ke halaman login dengan delay 2 detik
         setTimeout(() => {
           window.location.href = "/login";
         }, 2000);
       } else {
-        // Menampilkan toast untuk registrasi gagal
         toast.error(response.data.message, {
-          position: "top-center" // Menempatkan toast di tengah layar
+          position: "top-center" 
         });
       }
     } catch (error) {
       console.error("Error:", error.response.data);
-      // Menampilkan toast untuk registrasi gagal
       toast.error("Registrasi Gagal!", {
-        position: "top-center" // Menempatkan toast di tengah layar
+        position: "top-center" 
       });
     } finally {
-      setIsLoading(false); // Set isLoading false setelah selesai proses registrasi, baik berhasil atau tidak
+      setIsLoading(false); 
     }
   }
 
@@ -176,9 +172,9 @@ const Register = ({ title }) => {
               <button
                 type="submit"
                 className={`w-full bg-green-500 px-2 py-3 mt-4 text-white font-semibold tracking-widest uppercase rounded-lg hover:bg-green-300 cursor-pointer ${
-                  isLoading ? "opacity-50 cursor-not-allowed" : "" // Tambahkan style untuk men-disable tombol saat isLoading true
+                  isLoading ? "opacity-50 cursor-not-allowed" : ""
                 }`}
-                disabled={isLoading} // Disable tombol register saat isLoading true
+                disabled={isLoading} 
               >
                 {isLoading ? "Loading..." : "Register"} {/* Tampilkan teks "Loading..." saat isLoading true */}
               </button>

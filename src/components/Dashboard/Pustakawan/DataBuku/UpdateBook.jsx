@@ -67,14 +67,14 @@ const UpdateBook = ({ book, fetchBooks, onClose, open }) => {
       );
 
       if (response.data.success) {
-        onClose(); // Menutup modal terlebih dahulu
+        onClose(); 
         Swal.fire({
           title: "Berhasil!",
           text: "Buku berhasil di edit!",
           icon: "success",
           confirmButtonText: "OK"
         }).then(() => {
-          fetchBooks(); // Memanggil fungsi untuk refresh data buku
+          fetchBooks();
         });
       } else {
         Swal.fire({

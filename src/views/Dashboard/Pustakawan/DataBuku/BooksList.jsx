@@ -1,10 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import DataTable from "../../../../components/Dashboard/Pustakawan/DataTable/DataTable";
-import Navbar from '../../../../components/Dashboard/Pustakawan/NavbarPustakawan';
-import Sidebar from '../../../../components/Dashboard/Pustakawan/SidebarPustakawan';
 import TableList from "../../../../components/Dashboard/Pustakawan/DataBuku/DataBuku";
-import { PiMicrosoftExcelLogoLight } from "react-icons/pi"; // Import icon Import Excel
+import { PiMicrosoftExcelLogoLight } from "react-icons/pi";
 import "./BooksList.scss";
 
 function BooksList({ type }) {
@@ -12,7 +10,6 @@ function BooksList({ type }) {
     <>
         {/* mui data table */}
         <div className="data_table p-4">
-     
           <div className="flex justify-between mb-4">
             <div className="flex items-center">
             <h1 className="text-[28px] leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
@@ -39,7 +36,6 @@ function BooksList({ type }) {
               </div>
             </div>
           </div>
-
           {type === "book" ? <DataTable /> : <TableList />}
         </div>
         </>
