@@ -109,7 +109,6 @@ const Login = () => {
     }
   };
 
-
   return (
     <div className="grid md:grid-cols-2 md:gap- place-items-center w-full min-h-screen">
       <div className="hidden md:block md:w-full">
