@@ -14,7 +14,7 @@ import Swal from 'sweetalert2';
 import TextField from "@mui/material/TextField";
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
-import UpdateBook from './UpdateBook'; 
+import UpdateBook from './UpdateBook';
 
 function DataBuku() {
     document.title = "Skanic Library - Data Buku";
@@ -114,7 +114,7 @@ function DataBuku() {
     );
 
     return (
-        <div className="table-wrapper pb-20">
+        <div className="pb-20">
             <div className="flex items-center justify-between mb-4 mt-4">
                 <TextField
                     label="Cari data buku..."
@@ -131,88 +131,106 @@ function DataBuku() {
                     Tidak ada data buku yang tersedia!
                 </Alert>
             )}
-            <TableContainer component={Paper} className="table_list">
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell className="table_cell">No</TableCell>
-                            <TableCell className="table_cell">Judul Buku</TableCell>
-                            <TableCell className="table_cell">Sinopsis</TableCell>
-                            <TableCell className="table_cell">ISBN</TableCell>
-                            <TableCell className="table_cell">Penulis</TableCell>
-                            <TableCell className="table_cell">Jumlah Halaman</TableCell>
-                            <TableCell className="table_cell">Stok Buku</TableCell>
-                            <TableCell className="table_cell">Penerbit</TableCell>
-                            <TableCell className="table_cell">Tahun Terbit</TableCell>
-                            <TableCell className="table_cell">Kategori</TableCell>
-                            <TableCell className="table_cell">Sampul Buku</TableCell>
-                            <TableCell className="table_cell">Status</TableCell>
-                            <TableCell className="table_cell">Aksi</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {filteredBooks.map((book, index) => (
-                            <TableRow key={book.id}>
-                                <TableCell component="th" scope="row" className="table_cell">{(page - 1) * rowsPerPage + index + 1}</TableCell>
-                                <TableCell className="table_cell">{book.title}</TableCell>
-                                <TableCell className="table_cell">{book.synopsis}</TableCell>
-                                <TableCell className="table_cell">{book.isbn}</TableCell>
-                                <TableCell className="table_cell">{book.writer}</TableCell>
-                                <TableCell className="table_cell">{book.page_amount}</TableCell>
-                                <TableCell className="table_cell">{book.stock_amount}</TableCell>
-                                <TableCell className="table_cell">{book.publisher}</TableCell>
-                                <TableCell className="table_cell">{book.published}</TableCell>
-                                <TableCell className="table_cell">{book.category}</TableCell>
-                                <TableCell className="table_cell">
-                                    <img src={book.image} alt={book.title} className='w-auto h-auto mx-auto object-cover' />
-                                </TableCell>
-                                <TableCell className="table_cell">
-                                    <span className={`rounded-full p-2 text-white ${book.stock_amount > 0 ? 'bg-green-500' : 'bg-red-500'}`}>
-                                        {book.stock_amount > 0 ? 'Tersedia' : 'Habis'}
-                                    </span>
-                                </TableCell>
-                                <TableCell className="table_cell">
-                                    <div style={{ display: 'flex', gap: '8px' }}>
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            onClick={() => handleUpdate(book)}
-                                            style={{ minWidth: '75px' }}
-                                        >
-                                            Edit
-                                        </Button>
-                                        <Button
-                                            variant="contained"
-                                            color="error"
-                                            onClick={() => handleDelete(book.id)}
-                                            style={{ minWidth: '75px' }}
-                                        >
-                                            Hapus
-                                        </Button>
-                                    </div>
-                                </TableCell>
+            <div className="overflow-x-auto">
+                <TableContainer component={Paper} className="min-w-full">
+                    <Table sx={{ minWidth: 1200 }} aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                {[
+                                    'No', 'Judul Buku', 'Sinopsis', 'ISBN', 'Penulis', 'Jumlah Halaman', 
+                                    'Stok Buku', 'Penerbit', 'Tahun Terbit', 'Kategori', 'Sampul Buku', 
+                                    'Status', 'Aksi'
+                                ].map(header => (
+                                    <TableCell key={header} className="table_cell px-4 py-2 text-nowrap">
+                                        {header}
+                                    </TableCell>
+                                ))}
                             </TableRow>
-                        ))}
-                    </TableBody>
-                    <TableFooter>
-                        <TableRow>
-                            <TablePagination
-                                rowsPerPageOptions={[5, 10, 25]}
-                                colSpan={12}
-                                count={totalBooks}
-                                rowsPerPage={rowsPerPage}
-                                page={page - 1}
-                                SelectProps={{
-                                    inputProps: { 'aria-label': 'rows per page' },
-                                    native: true,
-                                }}
-                                onPageChange={handleChangePage}
-                                onRowsPerPageChange={handleChangeRowsPerPage}
-                            />
-                        </TableRow>
-                    </TableFooter>
-                </Table>
-            </TableContainer>
+                        </TableHead>
+                        <TableBody>
+                            {filteredBooks.map((book, index) => (
+                                <TableRow key={book.id}>
+                                    <TableCell component="th" scope="row" className="table_cell px-4 py-2 text-nowrap">
+                                        {(page - 1) * rowsPerPage + index + 1}
+                                    </TableCell>
+                                    <TableCell className="table_cell px-4 py-2 text-nowrap truncate">
+                                        {book.title}
+                                    </TableCell>
+                                    <TableCell className="table_cell px-4 py-2 text-nowrap truncate">
+                                        {book.synopsis}
+                                    </TableCell>
+                                    <TableCell className="table_cell px-4 py-2 text-nowrap truncate">
+                                        {book.isbn}
+                                    </TableCell>
+                                    <TableCell className="table_cell px-4 py-2 text-nowrap truncate">
+                                        {book.writer}
+                                    </TableCell>
+                                    <TableCell className="table_cell px-4 py-2 text-nowrap truncate">
+                                        {book.page_amount}
+                                    </TableCell>
+                                    <TableCell className="table_cell px-4 py-2 text-nowrap truncate">
+                                        {book.stock_amount}
+                                    </TableCell>
+                                    <TableCell className="table_cell px-4 py-2 text-nowrap truncate">
+                                        {book.publisher}
+                                    </TableCell>
+                                    <TableCell className="table_cell px-4 py-2 text-nowrap truncate">
+                                        {book.published}
+                                    </TableCell>
+                                    <TableCell className="table_cell px-4 py-2 text-nowrap truncate">
+                                        {book.category}
+                                    </TableCell>
+                                    <TableCell className="table_cell px-4 py-2 text-nowrap">
+                                        <img src={book.image} alt={book.title} className='w-auto h-auto mx-auto object-cover' />
+                                    </TableCell>
+                                    <TableCell className="table_cell px-4 py-2 text-nowrap">
+                                        <span className={`rounded-full p-2 text-white ${book.stock_amount > 0 ? 'bg-green-500' : 'bg-red-500'}`}>
+                                            {book.stock_amount > 0 ? 'Tersedia' : 'Habis'}
+                                        </span>
+                                    </TableCell>
+                                    <TableCell className="table_cell px-4 py-2 text-nowrap">
+                                        <div className="flex gap-2">
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => handleUpdate(book)}
+                                                style={{ minWidth: '75px' }}
+                                            >
+                                                Edit
+                                            </Button>
+                                            <Button
+                                                variant="outlined"
+                                                color="error"
+                                                onClick={() => handleDelete(book.id)}
+                                                style={{ minWidth: '75px' }}
+                                            >
+                                                Hapus
+                                            </Button>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                        <TableFooter>
+                            <TableRow>
+                                <TablePagination
+                                    rowsPerPageOptions={[5, 10, 25]}
+                                    colSpan={13}
+                                    count={totalBooks}
+                                    rowsPerPage={rowsPerPage}
+                                    page={page - 1}
+                                    SelectProps={{
+                                        inputProps: { 'aria-label': 'rows per page' },
+                                        native: true,
+                                    }}
+                                    onPageChange={handleChangePage}
+                                    onRowsPerPageChange={handleChangeRowsPerPage}
+                                />
+                            </TableRow>
+                        </TableFooter>
+                    </Table>
+                </TableContainer>
+            </div>
 
             {/* Modal for updating book */}
             {selectedBook && (
@@ -224,8 +242,7 @@ function DataBuku() {
                 />
             )}
         </div>
-        )
-    
+    );
 };
 
 export default DataBuku;
