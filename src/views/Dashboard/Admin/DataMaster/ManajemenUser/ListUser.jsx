@@ -37,7 +37,8 @@ const ListUser = () => {
         },
         params: {
           role: role, // Mengirim parameter role ke server
-          page: page,
+          search: searchKeyword, // Mengirim parameter pencarian ke server
+          page: page, // Mengirim parameter halaman ke server
         },
       });
       if (response.data.success) {
@@ -106,11 +107,14 @@ const ListUser = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     setPage(1);
-  };
+    fetchData();
+};
 
-  const handleRoleChange = (e) => {
+const handleRoleChange = (e) => {
     setRole(e.target.value);
-  };
+    setPage(1);
+    fetchData();
+};
 
   const handleStatusChange = async (id) => {
     try {
@@ -274,7 +278,7 @@ const ListUser = () => {
               <th className="px-4 py-2 border border-[#CBD5E0] w-[5%]">No</th>
               <th className="px-4 py-2 border border-[#CBD5E0]">Username</th>
               <th className="px-4 py-2 border border-[#CBD5E0]">Email</th>
-              {/* <th className="px-4 py-2 border border-[#CBD5E0]">Foto Profile</th> */}
+              <th className="px-4 py-2 border border-[#CBD5E0]">Sebagai</th>
               <th className="px-4 py-2 border border-[#CBD5E0]">Status</th>
               <th className="px-4 py-2 border border-[#CBD5E0] w-[5%]">Aksi</th>
             </tr>
@@ -287,6 +291,29 @@ const ListUser = () => {
                 </td>
                 <td className="border px-4 py-2">{user.name}</td>
                 <td className="border px-4 py-2">{user.email}</td>
+                <td className="border px-4 py-2">
+                    {/* Tampilkan semua role yang dimiliki user dengan warna berbeda */}
+                    {user.roles.map((role) => {
+                      // Tentukan warna berdasarkan nama role
+                      let roleColor;
+                      if (role.name === "pustakawan") {
+                        roleColor = "bg-blue-500"; // Warna untuk pustakawan
+                      } else if (role.name === "anggota") {
+                        roleColor = "bg-green-500"; // Warna untuk anggota
+                      } else {
+                        roleColor = "bg-gray-200"; // Default color untuk role lainnya
+                      }
+
+                      return (
+                        <span
+                          key={role.id}
+                          className={`inline-block ${roleColor} rounded-full px-3 py-1 text-sm font-semibold text-white mr-2`}
+                        >
+                          {role.name}
+                        </span>
+                      );
+                    })}
+                </td>
                 <td className="border px-4 py-2">
                   <span
                     className={`text-white px-3 rounded-full p-1 ${user.status === "Belum Aktif"
@@ -319,10 +346,7 @@ const ListUser = () => {
                 </td>
               </tr>
             ))}
-
           </tbody>
-
-
 
         </table>
         <p className="text-left mt-8">

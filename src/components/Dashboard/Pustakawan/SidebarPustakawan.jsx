@@ -78,9 +78,6 @@ function Sidebar() {
                             <BookmarkRemoveIcon className="icon" /> Pengembalian Buku
                         </li>
                     </NavLink>
-                    <li onClick={handleLogout}>
-                        <LogoutIcon className="icon" /> Keluar
-                    </li>
                 </ul>
             </div>
         </div>

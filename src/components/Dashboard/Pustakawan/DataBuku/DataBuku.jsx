@@ -164,7 +164,7 @@ function DataBuku() {
                                 <TableCell className="table_cell">{book.published}</TableCell>
                                 <TableCell className="table_cell">{book.category}</TableCell>
                                 <TableCell className="table_cell">
-                                    <img src={book.image} alt={book.title} className='w-auto mx-auto object-cover' />
+                                    <img src={book.image} alt={book.title} className='w-auto h-auto mx-auto object-cover' />
                                 </TableCell>
                                 <TableCell className="table_cell">
                                     <span className={`rounded-full p-2 text-white ${book.stock_amount > 0 ? 'bg-green-500' : 'bg-red-500'}`}>
@@ -224,7 +224,8 @@ function DataBuku() {
                 />
             )}
         </div>
-    );
-}
+        )
+    
+};
 
 export default DataBuku;

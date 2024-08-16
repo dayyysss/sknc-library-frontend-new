@@ -11,13 +11,13 @@ const Beranda = () => {
   };
 
   return (
-    <div className="min-h-[80vh] flex flex-col md:flex-row md:justify-between items-center md:mx-32 mx-5 mt-16">
-      <div className="md:w-2/4 text-center">
-        <h2 className="text-5xl font-semibold leading-tight">
+    <div className="min-h-[80vh] flex flex-col md:flex-row md:justify-between items-center md:mx-auto mx-5 mt-24 md:mt-24 max-w-screen-lg lg:max-w-screen-xl">
+      <div className="md:w-2/4 text-center md:text-center">
+        <h2 className="text-4xl mt-10 text-center md:text-5xl font-semibold leading-tight md:text-center">
           Selamat Datang Di <br />
           <span className="text-brightGreen"> Skanic Library</span>
         </h2>
-        <p className="text-lightText mt-5 m-6 text-center">
+        <p className="text-lightText mt-5 mb-5 mx-6 md:mx-0 text-center md:text-center">
           Temukan kemudahan dalam meminjam dan mengembalikan buku di Skanic
           Library! Jelajahi koleksi kami dan nikmati proses yang cepat dan
           praktis. Dapatkan pengalaman membaca yang menyenangkan dan memperluas
@@ -27,8 +27,8 @@ const Beranda = () => {
         <Button title="Cari Buku" onClick={handleCariBukuClick} />
       </div>
 
-      <div className="w-full md:w-2/4">
-        <img src={img} alt="img" className="mt-10" />
+      <div className="w-full md:w-2/4 flex justify-center md:justify-end mt-10 md:mt-0">
+        <img src={img} alt="img" className="max-w-full h-auto" />
       </div>
     </div>
   );

@@ -8,10 +8,13 @@ import kotaksaran from "../../assets/images/kotaksaran1.svg";
 
 const Layanan = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center md:px-32 px-5 my-10">
+    <div
+      id="service" // Tambahkan id agar sesuai dengan link di navbar
+      className="min-h-[80vh] flex flex-col items-center justify-center text-center md:px-32 px-5 pt-20 mb-10" // Gunakan px-5 untuk padding responsif
+    >
       <Heading title1="Nikmati Layanan" title2="Skanic Library" />
 
-      <div className="flex flex-wrap justify-center gap-6 mt-6">
+      <div className="flex flex-wrap justify-center gap-8 mt-10">
         <CoursesCard
           img={webImg}
           title="Sirkulasi"

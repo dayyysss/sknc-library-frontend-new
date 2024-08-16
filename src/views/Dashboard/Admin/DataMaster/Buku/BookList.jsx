@@ -229,7 +229,7 @@ const BookList = () => {
           </form>
         </div>
         <p className="mt-4 text-left">Total Buku : {totalBooks}</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mt-4">
           {filteredBooks.length === 0 && (
             <Alert variant="outlined" severity="warning">
               Tidak ada data buku yang tersedia!
@@ -244,13 +244,13 @@ const BookList = () => {
                 <h3 className="text-lg font-semibold mb-2 mt-5">{book.title}</h3>
               </button>
               <p className="text-gray-600 mb-2 flex-grow text-center">{book.writer}</p>
-
-              <div className="flex justify-between items-center mt-2">
-                <div>
+              <div>
                   <span className="text-sm font-medium text-gray-500">
                     Stok Buku : {book.stock_amount}
                   </span>
                 </div>
+              <div className="flex justify-between items-center mt-2">
+
                 <div className="flex space-x-2">
                   <button
                     onClick={() => handleBookClick(book.id)}

@@ -55,11 +55,6 @@ function Navbar() {
             <h3 className="text_none">SKANIC LIBRARY</h3>
           </Link>
         </div>
-        <div className="search">
-          <input type="text" placeholder="Search.." />
-
-          <SearchIcon className="search_icon" />
-        </div>
 
         <div className="item_lists">
           {/* <div className="item item_lan">
@@ -84,12 +79,8 @@ function Navbar() {
           </div> */}
 
           <div className="item">
-            <ChatBubbleOutlineIcon className="item_icon" />
-            <span className="badge">2</span>
-          </div>
-          <div className="item">
             <NotificationsNoneIcon className="item_icon" />
-            <span className="badge">1</span>
+            <span className="badge">0</span>
           </div>
 
           <div className="item_lists">
@@ -156,9 +147,6 @@ function Navbar() {
                       <BookmarkRemoveIcon className="icon" /> Pengembalian Buku
                     </li>
                   </Link>
-                  <li onClick={handleLogout}>
-                    <LogoutIcon className="icon" /> Logout
-                  </li>
                 </ul>
               </div>
             </div>

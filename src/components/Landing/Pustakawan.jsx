@@ -7,10 +7,10 @@ import img2 from "../../assets/images/pic2.png";
 
 const Pustakawan = () => {
   return (
-    <div className="min-h-[80vh] flex flex-col items-center justify-center md:px-32 px-5">
+    <div className="min-h-[80vh] flex flex-col items-center justify-center text-center md:px-32 px-5 mt-24">
       <Heading title1="Pustakawan" title2="Skanic Library" />
 
-      <div className="flex flex-col md:flex-row gap-5 mt-5">
+      <div className="flex flex-col md:flex-row justify-center gap-8 mt-10">
         <ReviewCard 
           img={img1}
           name="Jessica Reinanda"

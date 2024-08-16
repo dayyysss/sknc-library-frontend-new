@@ -21,36 +21,34 @@ const Navbar = () => {
   const handleLogin = () => {
     navigate("/login");
   };
-  // const handleRegister = () => {
-  //   navigate("/register");
-  // };
 
   return (
     <div className="top-0 fixed w-full z-10 bg-transparent">
       <div>
-        <div className="flex flex-row p-5 lg:px-32 px-5 bg-gradient-to-r from-backgroundColor to-brightColor shadow-[0_3px_10px_rgb(0,0,0,0.2)] backdrop-filter backdrop-blur-lg">
+        <div className="flex flex-row p-5 lg:px-32 px-5 bg-gradient-to-r from-backgroundColor to-brightColor shadow-[0_3px_10px_rgb(0,0,0,0.2)] backdrop-filter backdrop-blur-lg justify-between items-center">
           <div className="flex flex-row items-center cursor-pointer gap-0 navbar-container">
             <img
               src={LogoSl}
               alt="Skanic Library Logo"
-              className="logo-container md-5"
+              className="logo-container"
             />
-            <div className="md:mt-0 mb-3 md-5">
+            <div className="ml-2">
               <Link
-                to="/"
-                className=" font-semibold text-2xl cursor-pointer text-brightGreen flex mt-5"
+                to="home"
+                className="font-semibold text-2xl cursor-pointer text-brightGreen"
               >
                 SKANIC LIBRARY
               </Link>
             </div>
           </div>
 
-          <nav className="hidden md:flex flex-row items-center text-lg font-medium gap-8 pl-52">
+          <nav className="hidden md:flex flex-row items-center text-lg font-medium gap-8">
             <Link
               to="home"
               spy={true}
               smooth={true}
               duration={500}
+              offset={-80}
               className="group relative inline-block cursor-pointer hover:text-brightColor"
             >
               Beranda
@@ -61,6 +59,7 @@ const Navbar = () => {
               spy={true}
               smooth={true}
               duration={500}
+              offset={-80}
               className="group relative inline-block cursor-pointer hover:text-brightColor"
             >
               Tentang
@@ -71,6 +70,7 @@ const Navbar = () => {
               spy={true}
               smooth={true}
               duration={500}
+              offset={-80}
               className="group relative inline-block cursor-pointer hover:text-brightColor"
             >
               Layanan
@@ -81,6 +81,7 @@ const Navbar = () => {
               spy={true}
               smooth={true}
               duration={500}
+              offset={-80}
               className="group relative inline-block cursor-pointer hover:text-brightColor"
             >
               Pustakawan
@@ -91,6 +92,7 @@ const Navbar = () => {
               spy={true}
               smooth={true}
               duration={500}
+              offset={-80}
               className="group relative inline-block cursor-pointer hover:text-brightColor"
             >
               Kontak
@@ -98,14 +100,11 @@ const Navbar = () => {
             </Link>
           </nav>
 
-          <div className="hidden lg:flex items-center justify-end gap-4 ml-48">
+          <div className="hidden lg:flex items-center justify-end gap-4">
             <Button title="Masuk" onClick={handleLogin} />
-            {/* <Button title="Daftar" onClick={handleRegister} /> */}
           </div>
 
-          <div className="hidden lg:flex"></div>
-
-          <div className="md:hidden flex items-center pl-36">
+          <div className="md:hidden flex items-center">
             {menu ? (
               <AiOutlineClose size={25} onClick={handleChange} />
             ) : (
@@ -113,16 +112,19 @@ const Navbar = () => {
             )}
           </div>
         </div>
+
+        {/* Mobile Menu */}
         <div
-          className={`absolute bg-opacity-50 backdrop-filter backdrop-blur-lg ${
+          className={`absolute bg-opacity-90 backdrop-filter backdrop-blur-lg ${
             menu ? "translate-x-0" : "-translate-x-full"
-          } lg:hidden flex flex-col left-0 top-21 font-semibold text-2xl text-center pt-8 pb-4 gap-8 w-full h-fit transition-transform duration-300`}
+          } lg:hidden flex flex-col left-0 top-20 font-semibold text-2xl text-center pt-8 pb-4 gap-8 w-full h-fit transition-transform duration-300 bg-backgroundColor`}
         >
           <Link
             to="home"
             spy={true}
             smooth={true}
             duration={500}
+            offset={-80}
             className="hover:text-brightColor transition-all cursor-pointer"
             onClick={closeMenu}
           >
@@ -133,6 +135,7 @@ const Navbar = () => {
             spy={true}
             smooth={true}
             duration={500}
+            offset={-80}
             className="hover:text-brightColor transition-all cursor-pointer"
             onClick={closeMenu}
           >
@@ -143,6 +146,7 @@ const Navbar = () => {
             spy={true}
             smooth={true}
             duration={500}
+            offset={-80}
             className="hover:text-brightColor transition-all cursor-pointer"
             onClick={closeMenu}
           >
@@ -153,6 +157,7 @@ const Navbar = () => {
             spy={true}
             smooth={true}
             duration={500}
+            offset={-80}
             className="hover:text-brightColor transition-all cursor-pointer"
             onClick={closeMenu}
           >
@@ -163,6 +168,7 @@ const Navbar = () => {
             spy={true}
             smooth={true}
             duration={500}
+            offset={-80}
             className="hover:text-brightColor transition-all cursor-pointer"
             onClick={closeMenu}
           >

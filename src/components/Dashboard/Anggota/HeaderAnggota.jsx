@@ -42,26 +42,16 @@ function Header() {
 };
 
   return (
-    <div className="block md:flex items-center justify-between px-8 py-3 bg-neutral-50 mb-2">
-      <div className="serachbar border border-slate-200 p-1 rounded w-full md:w-1/3 flex items-center gap-2 mb-2 md:mb-0">
-        <span className="text-slate-400">
-          <IoIosSearch fontSize={26} />
-        </span>
-        <input
-          type="text"
-          placeholder="Cari buku dan kategori"
-          className="bg-inherit w-full border-none focus:outline-none focus:border-none text-neutral-400 text-sm focus:text-slate-700"
-        />
-      </div>
-      <div className="icons flex items-center gap-3">
+    <div className="block md:flex items-center justify-end px-8 py-3 bg-neutral-50 mb-2">
+      <div className="icons flex items-center">
         <Popover className="relative">
           {({ open }) => (
             <>
               <Popover.Button
                 className={
                   open
-                    ? `bg-gray-200 text-slate-400 cursor-pointer hover:text-slate-700 flex items-center border-none focus:outline-none focus:border-none p-1 rounded`
-                    : `text-slate-400 cursor-pointer hover:text-slate-700 flex items-center border-none focus:outline-none focus:border-none p-1`
+                    ? `bg-gray-200 text-slate-400 cursor-pointer hover:text-slate-700 flex items-center border-none focus:outline-none focus:border-none p-3 rounded`
+                    : `text-slate-400 cursor-pointer hover:text-slate-700 flex items-center border-none focus:outline-none focus:border-none p-3`
                 }
               >
                 <IoIosNotificationsOutline fontSize={26} />

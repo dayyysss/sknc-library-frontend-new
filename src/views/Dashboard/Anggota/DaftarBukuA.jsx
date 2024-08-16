@@ -12,6 +12,10 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Pagination from "@mui/material/Pagination";
 import { Card } from 'antd';
+import Alert from '@mui/material/Alert';
+import { FiInfo } from "react-icons/fi";
+import { FaEdit } from "react-icons/fa";
+import { RiDeleteBin5Line } from "react-icons/ri";
 
 function DaftarBukuA() {
   document.title = "Skanic Library - Daftar Buku";
@@ -26,6 +30,8 @@ function DaftarBukuA() {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const { Meta } = Card;
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     fetchData();
@@ -87,6 +93,17 @@ function DaftarBukuA() {
   const closeModal = () => {
     setModalOpen(false);
   };
+
+  const filteredBooks = searchKeyword
+    ? books.filter((book) =>
+      book.title.toLowerCase().includes(searchKeyword.toLowerCase())
+    )
+    : books;
+
+    const handleSearch = (e) => {
+      e.preventDefault();
+      setSearchKeyword(query); 
+    };
 
   const handleBookClick = async (bookId) => {
     try {
@@ -258,35 +275,53 @@ function DaftarBukuA() {
             </Menu>
           </div>
 
-          <div className="grid grid-cols-4 gap-5 mt-5 text-center">
-            {booksTop.map((book) => (
-              <Card key={book.id} sx={{ maxWidth: 200 }}>
-                <CardMedia
-                  component="img"
-                  alt="Cover Buku"
-                  height="140"
-                  image={book.image}
-                  onClick={() => handleDetailClick(book.id)}
-                  style={{ cursor: "pointer" }}
-                />
-                <CardContent>
-                  <Typography
-                    gutterBottom
-                    variant="h5"
-                    component="div"
-                    className="cursor-pointer"
-                    onClick={() => handleDetailClick(book.id)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    {book.title}
+          <div className="mt-4">
+          <form onSubmit={handleSearch} className="w-full max-w-md mx-auto">
+            <div className="flex items-center border border-slate-500 rounded">
+              <input
+                type="text"
+                className="w-full py-2 px-4 outline-none"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Cari data buku di sini..."
+              />
+              <button
+                onClick={handleSearch}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Cari
+              </button>
+            </div>
+          </form>
+        </div>
+        <p className="mt-4 text-left">Total Buku : {totalBooks}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mt-4">
+          {filteredBooks.length === 0 && (
+            <Alert variant="outlined" severity="warning">
+              Tidak ada data buku yang tersedia!
+            </Alert>
+          )}
+          {filteredBooks.map((book, index) => (
+            <div key={index + 1} className="bg-white p-4 rounded shadow-md hover:shadow-lg flex flex-col">
+              <button onClick={() => handleBookClick(book.id)} className="cursor-pointer focus:outline-none">
+                <div className="flex justify-center">
+                  <img src={book.image} alt={book.title} className="h-52 w-52 object-cover" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2 mt-5">{book.title}</h3>
+              </button>
+
+                  <Typography variant="body2" color="text.secondary" align="center">
+                    Penulis: {book.writer}
                   </Typography>
                   <Typography variant="body2" color="text.secondary" align="center">
-                    {book.writer}
+                    Kategori: {book.category}
                   </Typography>
-                  <Typography className="" style={{ color: book.stock_amount === 0 ? "red" : "#4CAF50", fontWeight: "bold" }}>
+                <CardActions className="flex justify-center">
+                  <Typography style={{ color: book.stock_amount === 0 ? "red" : "#4CAF50", fontWeight: "bold" }}>
                     {book.stock_amount === 0 ? "Tidak Tersedia" : "Tersedia"}
                   </Typography>
-                </CardContent>
+                </CardActions>
+
                 <CardActions className="flex justify-between">
                   <Button
                     variant="contained"
@@ -303,49 +338,10 @@ function DaftarBukuA() {
                     Detail
                   </Button>
                 </CardActions>
-              </Card>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-4 gap-5 mt-5">
-            {booksBottom.map((book) => (
-              <Card key={book.id} sx={{ maxWidth: 200 }}>
-                <CardMedia
-                  component="img"
-                  alt="Cover Buku"
-                  height="140"
-                  image={book.image}
-                  onClick={() => handleBookClick(book.id)}
-                  style={{ cursor: "pointer" }}
-                />
-                <CardContent>
-                  <Typography
-                    gutterBottom
-                    variant="h5"
-                    component="div"
-                    className="cursor-pointer"
-                    onClick={() => handleBookClick(book.id)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    {book.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" align="center">
-                    Penulis: {book.writer}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" align="center">
-                    Kategori: {book.category}
-                  </Typography>
-                </CardContent>
-
-                <CardActions className="flex justify-center">
-                  <Typography style={{ color: book.stock_amount === 0 ? "red" : "#4CAF50", fontWeight: "bold" }}>
-                    {book.stock_amount === 0 ? "Tidak Tersedia" : "Tersedia"}
-                  </Typography>
-                </CardActions>
-              </Card>
-            ))}
-          </div>
-
+              </div>
+          ))}
+        </div>
+        
           <Pagination
             count={totalPages}
             page={page}
@@ -356,10 +352,10 @@ function DaftarBukuA() {
 
         {modalOpen && selectedBook && (
           <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto">
-            <div className="absolut inset-0 bg-black opacity-50"></div>
-            <div className="z-50 bg-white p-8 rounded-lg max-w-lg w-full mx-4 flex">
-              <div className="md:w-1/2 mr-4">
-                <img src={selectedBook.image} alt="Sampul Buku" className="w-full h-full object-fill mx-auto" />
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="z-auto bg-white p-4 rounded-lg max-w-max w-full mx-2 flex">
+              <div className="md:w-auto mr-4">
+                <img src={selectedBook.image} alt="Sampul Buku" className="w-80 h-80 object-fill mx-auto" />
               </div>
               <div className="w-2/3 flex flex-col">
                 <h2 className="text-xl font-bold mb-4 text-center">Detail Buku </h2>
@@ -394,9 +390,10 @@ function DaftarBukuA() {
                       className="w-full px-3 py-2 border rounded-md"
                     />
                   </div>
-                  <div className="flex items-center">
-                    <button className="bg-green-500 text-white px-4 py-2 mr-2" onClick={handlePinjamBuku}>Pinjam</button>
-                    <button className="bg-gray-500 text-white px-4 py-2" onClick={handleCloseModal}>Tutup</button>
+                    <div className="flex items-center">
+                      <button className="bg-green-500 text-white px-4 py-2 mr-2" onClick={handlePinjamBuku}>Pinjam</button>
+                      <button className="bg-gray-500 text-white px-4 py-2" onClick={handleCloseModal}>Tutup</button>
+                    </div>
                   </div>
                 </div>
               </div>

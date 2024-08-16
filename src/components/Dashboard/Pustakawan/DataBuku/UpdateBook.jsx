@@ -43,7 +43,7 @@ const UpdateBook = ({ book, fetchBooks, onClose, open }) => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("_method", "POST");
+    formData.append("method_", "PUT");
     formData.append("title", title);
     formData.append("synopsis", synopsis);
     formData.append("isbn", isbn);
