@@ -273,7 +273,7 @@ const UpdateBook = ({ book, fetchBooks, onClose, open }) => {
             </Button>
             <Button
               variant="contained"
-              color="secondary"
+              color="primary"
               onClick={onClose}
               className="w-full md:w-auto"
             >
