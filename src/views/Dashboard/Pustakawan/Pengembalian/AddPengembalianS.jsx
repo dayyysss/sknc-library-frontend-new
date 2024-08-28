@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-const AddPengembalian = ({ closeModal, fetchData }) => {
+const AddPengembalianS = ({ closeModal, fetchData }) => {
   const [returnDate, setReturnDate] = useState('');
   const [status, setStatus] = useState('');
   const [borrowId, setBorrowId] = useState('');
@@ -54,44 +54,45 @@ const AddPengembalian = ({ closeModal, fetchData }) => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post(
-        `http://127.0.0.1:8000/api/restore/${borrowId}`,
-        {
-          returndate: returnDate,
-          status: status,
-          borrow_id: borrowId,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+        const response = await axios.post(
+            `http://127.0.0.1:8000/api/restore/${borrowId}`,
+            {
+                returndate: returnDate,
+                status: status,
+                borrow_id: borrowId,
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
 
-      if (response.data.success) {
-        Swal.fire({
-          icon: "success",
-          title: "Pengembalian Berhasil",
-          text: "Pengembalian telah berhasil ditambahkan.",
-        });
-        closeModal();
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Gagal Menambahkan Pengembalian",
-          text: response.data.message || "Terjadi kesalahan saat menambahkan pengembalian.",
-        });
-      }
+        if (response.data.success) {
+            Swal.fire({
+                icon: "success",
+                title: "Pengembalian Berhasil",
+                text: "Pengembalian telah berhasil ditambahkan.",
+            }).then(() => {
+                window.location.reload();  // Refresh halaman setelah SweetAlert ditutup
+            });
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "Gagal Menambahkan Pengembalian",
+                text: response.data.message || "Terjadi kesalahan saat menambahkan pengembalian.",
+            });
+        }
     } catch (error) {
-      console.error("Gagal menambahkan pengembalian:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Gagal Menambahkan Pengembalian",
-        text: error.response?.data?.message || "Terjadi kesalahan saat menambahkan pengembalian.",
-      });
+        console.error("Gagal menambahkan pengembalian:", error);
+        Swal.fire({
+            icon: "error",
+            title: "Gagal Menambahkan Pengembalian",
+            text: error.response?.data?.message || "Terjadi kesalahan saat menambahkan pengembalian.",
+        });
     }
-  };
+};
 
   const handleCancel = () => {
     closeModal();
@@ -144,4 +145,4 @@ const AddPengembalian = ({ closeModal, fetchData }) => {
   );
 };
 
-export default AddPengembalian;
+export default AddPengembalianS;

@@ -46,7 +46,6 @@ const DendaA = () => {
             console.error("Error fetching data:", error);
         }
     };
-    
 
     const getAuthToken = () => {
         return localStorage.getItem("token");
@@ -71,11 +70,11 @@ const DendaA = () => {
                     <TableBody>
                         {Array.isArray(data) && data.length > 0 ? (
                             data.map((row, index) => (
-                                <TableRow key={index}>
+                                <TableRow key={row.id}>
                                     <TableCell className="table_cell">{row.returndate}</TableCell>
-                                    <TableCell className="table_cell">{row.borrowing_end}</TableCell>
-                                    <TableCell className="table_cell">{row.status_keterlambatan}</TableCell>
-                                    <TableCell className="table_cell">{row.book_id}</TableCell>
+                                    <TableCell className="table_cell">{row.borrow.borrowing_end}</TableCell>
+                                    <TableCell className="table_cell">{row.status}</TableCell>
+                                    <TableCell className="table_cell">{row.book.title}</TableCell>
                                     <TableCell className="table_cell">{row.fine}</TableCell>
                                 </TableRow>
                             ))
@@ -89,7 +88,6 @@ const DendaA = () => {
             </TableContainer>
         </div>
     );
-    
 };
 
 export default DendaA;

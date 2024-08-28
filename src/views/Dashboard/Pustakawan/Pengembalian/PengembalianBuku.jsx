@@ -19,7 +19,9 @@ import Fade from "@mui/material/Fade";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { RiCheckboxCircleFill } from "react-icons/ri";
 import { MdOutlineCheckBox } from "react-icons/md";
-import GeneratePdf from "../../GeneratePdfPengembalian"
+import GeneratePdf from "../../GeneratePdfPengembalian";
+import AddPengembalianS from "./AddPengembalianS.jsx";
+import Swal from "sweetalert2";
 
 function PengembalianBuku({ type }) {
   document.title = "Skanic Library - Pengembalian Buku";
@@ -148,7 +150,7 @@ function PengembalianBuku({ type }) {
 
       const response = await axios.put(
         `http://127.0.0.1:8000/api/restore/${id}/update-status`,
-        { status: "Dikembalikan" }, // Update status to "Dikembalikan"
+        { status: "Dikembalikan" },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -157,7 +159,7 @@ function PengembalianBuku({ type }) {
       );
 
       if (response.data.success) {
-        fetchData(); // Refetch data after status update
+        fetchData();
         Swal.fire({
           title: "Success!",
           text: "Status berhasil diubah menjadi Dikembalikan.",
@@ -176,7 +178,7 @@ function PengembalianBuku({ type }) {
         console.error("Token not available. Please login.");
         return;
       }
-
+  
       if (status === "Denda Belum Dibayar") {
         const response = await axios.put(
           `http://127.0.0.1:8000/api/restore/${id}/update-fine`,
@@ -187,21 +189,20 @@ function PengembalianBuku({ type }) {
             },
           }
         );
-
-        if (response.data.success) {
-          fetchData();
+  
+        if (response.data.datasuccess) {
+          fetchData(); // Refresh data setelah perubahan status denda
           Swal.fire({
             title: "Success!",
             text: "Status berhasil diubah menjadi Denda Dibayar.",
             icon: "success",
           });
         }
-      } else {
       }
     } catch (error) {
       console.error("Error updating status:", error);
     }
-  };
+  };  
 
   const formatNumber = (num) => {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(num);
@@ -212,7 +213,6 @@ function PengembalianBuku({ type }) {
   };
 
   return (
-
     <div className="px-[25px] pt-[25px] pb-[370px]">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
@@ -236,12 +236,12 @@ function PengembalianBuku({ type }) {
             <FaFilePdf className="mr-2" />
             Cetak Pengembalian
           </button>
-          {/* <button
+          <button
             onClick={openAddModal}
             className="bg-blue-500 text-white px-4 py-2 rounded mr-4 ml-4"
           >
             Tambah Pengembalian
-          </button> */}
+          </button>
         </div>
       </div>
       <TableContainer component={Paper} className="table_list mt-10">
@@ -286,7 +286,7 @@ function PengembalianBuku({ type }) {
                     <div className="flex items-center">
                       {pengembalian.status === "Menunggu" && (
                         <MdOutlineCheckBox
-                          onClick={() => handleStatusChange(pengembalian.id, pengembalian.status)}
+                          onClick={() => handleStatusChange(pengembalian.id)}
                           className="text-white cursor-pointer text-lg bg-green-500 rounded-full p-1 mr-2 w-7 h-7"
                         />
                       )}
@@ -331,7 +331,7 @@ function PengembalianBuku({ type }) {
           </TableFooter>
         </Table>
       </TableContainer>
-      {isAddModalOpen && <AddPeminjaman closeModal={closeAddModal} />}
+      {isAddModalOpen && <AddPengembalianS closeModal={closeAddModal} />} {/* Perbaiki modal */}
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -351,10 +351,9 @@ function PengembalianBuku({ type }) {
               </Button>
               <h2 className="text-xl font-bold mb-4">Detail Peminjaman</h2>
               {selectedBorrow && (
-                // flex 1
-                <div className=" md:flex-row">
-                  <div className="md:w-1/2 flex ">
-                    <div className="bg-gray-100 p-4 rounded-md mb-4 ">
+                <div className="md:flex-row">
+                  <div className="md:w-1/2 flex">
+                    <div className="bg-gray-100 p-4 rounded-md mb-4">
                       <p className="text-sm font-semibold">Nama Peminjam:</p>
                       <p>{selectedBorrow.user.name}</p>
                       <p className="text-sm font-semibold">Email:</p>
@@ -362,7 +361,7 @@ function PengembalianBuku({ type }) {
                       <p className="text-sm font-semibold">Status User:</p>
                       <p>{selectedBorrow.user.status}</p>
                     </div>
-                    <div className="md:w-1/2 md:ml-8 ">
+                    <div className="md:w-1/2 md:ml-8">
                       <div className="bg-gray-100 p-4 rounded-md mb-4 w-[200px]">
                         <p className="text-sm font-semibold">Judul Buku:</p>
                         <p>{selectedBorrow.book.title}</p>
@@ -373,7 +372,6 @@ function PengembalianBuku({ type }) {
                       </div>
                     </div>
                   </div>
-                  {/* flex 2 */}
                   <div className="md:w-1/2 md:ml-8 flex items-center w-full gap-5">
                     <div className="bg-gray-100 p-4 rounded-md mb-4">
                       <p className="text-sm font-semibold">Jumlah Buku Dipinjam:</p>
@@ -381,14 +379,13 @@ function PengembalianBuku({ type }) {
                     </div>
                     <div className="bg-gray-100 p-4 rounded-md mb-4">
                       <p className="text-sm font-semibold">Status:</p>
-                      <p className=" rounded-full p-1 bg-green-500 px-4 text-white">{selectedBorrow.status}</p>
+                      <p className="rounded-full p-1 bg-green-500 px-4 text-white">{selectedBorrow.status}</p>
                     </div>
                     <div className="bg-gray-100 p-4 rounded-md mb-4">
                       <p className="text-sm font-semibold">Deadline:</p>
                       <p>{selectedBorrow.deadline}</p>
                     </div>
                   </div>
-                  {/* flex 3 */}
                   <div className="md:w-1/2 md:ml-8 flex items-center w-full gap-5">
                     <div className="bg-gray-100 p-4 rounded-md mb-4">
                       <p className="text-sm font-semibold">Awal Peminjaman:</p>
@@ -405,7 +402,6 @@ function PengembalianBuku({ type }) {
           </div>
         </Fade>
       </Modal>
-      {/* Generate PDF Modal */}
       <Modal
         open={isGenerateModalOpen} // Use state to control modal open state
         onClose={() => setIsGenerateModalOpen(false)} // Close modal function
@@ -421,7 +417,7 @@ function PengembalianBuku({ type }) {
           </div>
         </Fade>
       </Modal>
-    </div >
+    </div>
   );
 }
 

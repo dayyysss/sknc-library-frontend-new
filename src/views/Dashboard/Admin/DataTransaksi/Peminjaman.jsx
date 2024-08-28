@@ -17,7 +17,7 @@ import TextField from "@mui/material/TextField";
 import Swal from "sweetalert2";
 import { FaFilePdf } from "react-icons/fa";
 import AddPeminjaman from "./AddPengembalian";
-import GeneratePdf from "../../GeneratePdfPeminjaman"
+import GeneratePdf from "../../GeneratePdfPeminjaman";
 
 const PeminjamanCompo = () => {
   const [books, setBooks] = useState([]);
@@ -68,12 +68,20 @@ const PeminjamanCompo = () => {
   const handleAccept = async (id) => {
     try {
       console.log("Accepting borrow with id:", id);
+  
+      // Mendapatkan token autentikasi
       const token = getAuthToken();
       if (!token) {
         console.error("Token not available. Please login.");
+        Swal.fire({
+          title: "Error!",
+          text: "Token tidak tersedia. Silakan login.",
+          icon: "error",
+        });
         return;
       }
-
+  
+      // Mengirimkan permintaan PUT untuk memperbarui status peminjaman
       const response = await axios.put(
         `http://127.0.0.1:8000/api/borrow/${id}/update-status`,
         { status: "accepted" },
@@ -83,14 +91,26 @@ const PeminjamanCompo = () => {
           },
         }
       );
+  
+      // Memperbarui data setelah status diubah
       fetchData();
+  
+      // Menampilkan notifikasi sukses
       Swal.fire({
         title: "Success!",
         text: "Status peminjaman berhasil diubah menjadi Sukses.",
         icon: "success",
       });
+  
     } catch (error) {
       console.error("Error updating status peminjaman:", error);
+  
+      // Menampilkan notifikasi error
+      Swal.fire({
+        title: "Error!",
+        text: "Gagal mengubah status peminjaman.",
+        icon: "error",
+      });
     }
   };
 
@@ -246,29 +266,29 @@ const PeminjamanCompo = () => {
           <TableBody>
             {filteredBorrow.map((borrow, index) => (
               <TableRow key={borrow.id}>
-                <TableCell className="table_cell"> {(page - 1) * 10 + index + 1}</TableCell>
-                <TableCell className="table_cell">{borrow.user.name}</TableCell>
-                <TableCell className="table_cell">{borrow.book.title}</TableCell>
-                <TableCell className="table_cell">
+              <TableCell className="table_cell"> {(page - 1) * 10 + index + 1}</TableCell>
+              <TableCell className="table_cell">{borrow.user.name}</TableCell>
+              <TableCell className="table_cell">{borrow.book.title}</TableCell>
+              <TableCell className="table_cell">
                   {borrow.borrowing_start}
                 </TableCell>
                 <TableCell className="table_cell">
                   {borrow.borrowing_end}
                 </TableCell>
-                <TableCell className="table_cell">
-                  <span
-                    className={`text-white px-3 rounded-full p-1 ${borrow.status === "Menunggu"
-                      ? "bg-yellow-500"
-                      : borrow.status === "Diterima"
-                        ? "bg-green-500"
-                        : borrow.status === "Selesai"
-                          ? "bg-blue-500"
-                          : ""
-                      }`}
-                  >
-                    {borrow.status}
-                  </span>
-                </TableCell>
+              <TableCell className="table_cell">
+                <span
+                  className={`text-white px-3 rounded-full p-1 ${borrow.status === "Menunggu"
+                    ? "bg-yellow-500"
+                    : borrow.status === "Diterima"
+                      ? "bg-green-500"
+                      : borrow.status === "Selesai"
+                        ? "bg-blue-500"
+                        : ""
+                    }`}
+                >
+                  {borrow.status}
+                </span>
+              </TableCell>
                 <TableCell className="table_cell">
                   <div className="flex space-x-2">
                     {borrow.status === "Menunggu" && (
