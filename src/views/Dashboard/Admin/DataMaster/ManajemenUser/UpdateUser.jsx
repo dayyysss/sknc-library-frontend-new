@@ -8,6 +8,8 @@ const UpdateUser = ({ userId, onClose, user }) => {
     email: "",
     password: "",
     password_confirmation: "",
+    roles: "",
+    status: "",
     image: null,
   });
   const [error, setError] = useState("");
@@ -21,6 +23,8 @@ const UpdateUser = ({ userId, onClose, user }) => {
         email: user.email || "",
         password: "",
         password_confirmation: "",
+        roles: user.roles || "",
+        status: user.status || "",  // Initialize status from user data
       });
     }
   }, [user]);
@@ -163,6 +167,33 @@ const UpdateUser = ({ userId, onClose, user }) => {
               placeholder="Konfirmasi Kata Sandi"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             />
+          </div>
+          <div className="mb-4">
+            <select
+              name="roles"
+              value={formData.roles}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+              required
+            >
+              <option value="">Pilih Role</option>
+              <option value="admin">Admin</option>
+              <option value="user">User</option>
+              {/* Tambahkan opsi role lainnya jika diperlukan */}
+            </select>
+          </div>
+          <div className="mb-4">
+            <select
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+              required
+            >
+              <option value="">Pilih Status</option>
+              <option value="aktif">Aktif</option>
+              <option value="nonaktif">Nonaktif</option>
+            </select>
           </div>
           {error && <p className="text-red-500">{error}</p>}
           <button

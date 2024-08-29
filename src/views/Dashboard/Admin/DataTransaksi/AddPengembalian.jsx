@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-const AddPengembalian = ({ closeModal, fetchData }) => {
+const AddPengembalian = ({ closeModal, onSuccess }) => {
   const [returnDate, setReturnDate] = useState('');
   const [status, setStatus] = useState('');
   const [borrowId, setBorrowId] = useState('');
@@ -10,7 +10,7 @@ const AddPengembalian = ({ closeModal, fetchData }) => {
   const [userName, setUserName] = useState('');
   const modalRef = useRef(null);
 
-  const token = localStorage.getItem('token'); 
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -75,7 +75,9 @@ const AddPengembalian = ({ closeModal, fetchData }) => {
           title: "Pengembalian Berhasil",
           text: "Pengembalian telah berhasil ditambahkan.",
         });
-        closeModal();
+        
+        // Call the onSuccess function to refresh data and close the modal
+        onSuccess();
       } else {
         Swal.fire({
           icon: "error",

@@ -100,6 +100,14 @@ const PengembalianCompo = () => {
     setIsAddModalOpen(true);
   };
 
+  const closeDetailModal = () => {
+    setIsDetailModalOpen(false);
+  };
+
+  const openDetailModal = () => {
+    setIsDetailModalOpen(true);
+  };
+
   const closeAddModal = () => {
     setIsAddModalOpen(false);
   };
@@ -345,17 +353,25 @@ const PengembalianCompo = () => {
             </TableFooter>
           </Table>
         </TableContainer>
-        {isAddModalOpen && <AddPengembalian closeModal={closeAddModal} />}
-        <Modal
-          aria-labelledby="transition-modal-title"
-          aria-describedby="transition-modal-description"
-          open={isDetailModalOpen}
-          onClose={handleCloseDetailModal} 
-          closeAfterTransition
-          BackdropComponent={Backdrop}
-          BackdropProps={{
-            timeout: 500,
+        {isAddModalOpen && (
+        <AddPengembalian 
+          closeModal={closeAddModal} 
+          onSuccess={() => {
+            fetchData(); // Refresh data setelah pengembalian berhasil ditambahkan
+            closeAddModal(); // Tutup modal setelah data di-refresh
           }}
+        />
+      )}
+        <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={isDetailModalOpen}
+        onClose={closeDetailModal} // Close detail modal function
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
         >
           <Fade in={isDetailModalOpen}>
             <div className="fixed inset-0 flex items-center justify-center" onClick={handleCloseDetailModal}>

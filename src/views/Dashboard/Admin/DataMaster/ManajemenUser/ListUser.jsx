@@ -90,10 +90,10 @@ const ListUser = () => {
     }
   };
 
-  const handleUpdate = async (userId) => {
-    setSelectedBook(userId);
+  const handleUpdate = async (user) => {
+    setSelectedBook(user); // Simpan seluruh objek pengguna, bukan hanya ID
     setIsModalOpen(true);
-  };
+  };  
 
   const handleAddUser = () => {
     setSelectedBook(null); 
@@ -334,10 +334,10 @@ const handleRoleChange = (e) => {
                         className="text-white cursor-pointer text-lg bg-green-500 rounded-full p-1 mr-2 w-7 h-7"
                       />
                     )}
-                    <FaEdit
-                      onClick={() => handleUpdate(user.id)}
-                      className="text-white cursor-pointer text-lg bg-blue-500 rounded-full p-1 mr-2 w-7 h-7"
-                    />
+           <FaEdit
+  onClick={() => handleUpdate(user)} // Kirim seluruh objek user, bukan hanya user.id
+  className="text-white cursor-pointer text-lg bg-blue-500 rounded-full p-1 mr-2 w-7 h-7"
+/>
                     <RiDeleteBin5Line
                       onClick={() => handleDelete(user.id)}
                       className="text-white cursor-pointer w-7 h-7 bg-red-500 rounded-full p-1 mr-2"
@@ -368,22 +368,22 @@ const handleRoleChange = (e) => {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <button
-              className="absolute top-0 right-0 p-2"
-              onClick={handleCloseModal}
-            >
-              Close
-            </button>
-            {selectedBook !== null ? (
-              <UpdateUser userId={selectedBook} onClose={handleCloseModal} />
-            ) : (
-              <AddUserModal onClose={handleCloseModal} refreshData={refreshData} />
-            )}
-          </div>
-        </div>
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="bg-white p-6 rounded-lg shadow-md relative">
+      <button
+        className="absolute top-0 right-0 p-2"
+        onClick={handleCloseModal}
+      >
+        Close
+      </button>
+      {selectedBook !== null ? (
+        <UpdateUser user={selectedBook} onClose={handleCloseModal} />
+      ) : (
+        <AddUserModal onClose={handleCloseModal} refreshData={refreshData} />
       )}
+    </div>
+  </div>
+)}
 
       {/* Modal unggah Excel */}
       {isImportModalOpen && (
