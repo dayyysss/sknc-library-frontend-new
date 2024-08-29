@@ -2,7 +2,10 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import Swal from 'sweetalert2';
 
-const UpdateTamu = ({ userId, onClose, user, fetchData }) => {
+const UpdateTamu = ({ userId, onClose, selectedGuest, fetchData }) => {
+  const [error, setError] = useState("");
+
+  const modalRef = useRef(null);
   const [formData, setFormData] = useState({
     name: "",
     class: "",
@@ -11,22 +14,19 @@ const UpdateTamu = ({ userId, onClose, user, fetchData }) => {
     goals: "",
     telp: "",
   });
-  const [error, setError] = useState("");
-
-  const modalRef = useRef(null);
 
   useEffect(() => {
-    if (user) {
+    if (selectedGuest) {
       setFormData({
-        name: user.name || "",
-        class: user.class || "",
-        departemen: user.departemen || "",
-        email: user.email || "",
-        goals: user.goals || "",
-        telp: user.telp || "",
+        name: selectedGuest.name || "",
+        class: selectedGuest.class || "",
+        departemen: selectedGuest.departemen || "",
+        email: selectedGuest.email || "",
+        goals: selectedGuest.goals || "",
+        telp: selectedGuest.telp || "",
       });
     }
-  }, [user]);
+  }, [selectedGuest]);
 
   const handleChange = (e) => {
     if (e.target.type === "file") {

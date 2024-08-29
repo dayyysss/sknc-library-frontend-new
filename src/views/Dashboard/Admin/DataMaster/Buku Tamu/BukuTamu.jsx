@@ -14,6 +14,7 @@ const BukuTamu = () => {
   const chartRef = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedGuestId, setSelectedGuestId] = useState(null);
+  const [selectedGuest, setSelectedGuest] = useState(null);
   const [selectedGoal, setSelectedGoal] = useState(null);
   const [form] = Form.useForm();
   const [totalGuests, setTotalGuests] = useState(0);
@@ -29,7 +30,7 @@ const BukuTamu = () => {
 
   useEffect(() => {
     nameInputRef.current && nameInputRef.current.focus();
-  }, []);  
+  }, []);
 
   const fetchGuestsToday = async () => {
     try {
@@ -178,8 +179,9 @@ const BukuTamu = () => {
     console.log("Tombol Rekapitulasi Pengunjung diklik");
   };
 
-  const handleEdit = (guestId) => {
-    setSelectedGuestId(guestId);
+  const handleEdit = (guest) => {
+    setSelectedGuest(guest);
+    setSelectedGuestId(guest.id);
     setIsModalOpen(true);
   };
 
@@ -200,7 +202,7 @@ const BukuTamu = () => {
 
   const handleAddGuest = () => {
     identityRef.current.scrollIntoView({ behavior: "smooth" });
-  };  
+  };
 
   return (
     <>
@@ -257,14 +259,14 @@ const BukuTamu = () => {
           <h1 className="text-2xl text-start font-semibold mb-4 text-blue-400 flex items-center">
             <IoPeopleSharp className="mr-2 text-blue-400" /> Daftar Tamu
           </h1>
-          
+
           <div className="flex items-center mb-4">
-            <Input 
-              type="text" 
-              placeholder="Cari data tamu berdasarkan nama..." 
-              value={searchKeyword} 
-              onChange={(e) => setSearchKeyword(e.target.value)} 
-              className="border p-2 rounded-md mr-10" 
+            <Input
+              type="text"
+              placeholder="Cari data tamu berdasarkan nama..."
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+              className="border p-2 rounded-md mr-10"
             />
             <div className="flex justify-end flex-grow">
               <div className="flex items-center gap-2">
@@ -296,7 +298,7 @@ const BukuTamu = () => {
               title="Aksi"
               render={(text, record) => (
                 <Space>
-                  <Button type="primary" shape="round" className="bg-blue-500" onClick={() => handleEdit(record.id)}>Edit</Button>
+                  <Button type="primary" shape="round" className="bg-blue-500" onClick={() => handleEdit(record)}>Edit</Button>
                   <Button danger shape="round" onClick={() => handleDelete(record.id)}>Delete</Button>
                 </Space>
               )}
@@ -310,7 +312,12 @@ const BukuTamu = () => {
             onChange={(page) => setPage(page)}
           />
           {isModalOpen && (
-            <UpdateTamu userId={selectedGuestId} onClose={() => setIsModalOpen(false)} />
+            <UpdateTamu
+              userId={selectedGuestId}
+              selectedGuest={selectedGuest}
+              onClose={() => setIsModalOpen(false)}
+              fetchData={fetchGuestsToday}
+            />
           )}
         </div>
       </div>
