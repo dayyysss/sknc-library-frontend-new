@@ -93,10 +93,10 @@ const ListUser = () => {
   const handleUpdate = async (user) => {
     setSelectedBook(user); // Simpan seluruh objek pengguna, bukan hanya ID
     setIsModalOpen(true);
-  };  
+  };
 
   const handleAddUser = () => {
-    setSelectedBook(null); 
+    setSelectedBook(null);
     setIsModalOpen(true);
   };
 
@@ -108,13 +108,13 @@ const ListUser = () => {
     e.preventDefault();
     setPage(1);
     fetchData();
-};
+  };
 
-const handleRoleChange = (e) => {
+  const handleRoleChange = (e) => {
     setRole(e.target.value);
     setPage(1);
     fetchData();
-};
+  };
 
   const handleStatusChange = async (id) => {
     try {
@@ -163,7 +163,7 @@ const handleRoleChange = (e) => {
 
   const exportAll = () => {
     const token = localStorage.getItem("token");
-  
+
     axios
       .get("http://127.0.0.1:8000/api/alluser/export", {
         responseType: "blob",
@@ -198,7 +198,7 @@ const handleRoleChange = (e) => {
         console.error("Export error:", error);
       });
   };
-  
+
   const filteredBooks = books.filter((book) =>
     book.name.toLowerCase().includes(searchKeyword.toLowerCase())
   );
@@ -292,27 +292,27 @@ const handleRoleChange = (e) => {
                 <td className="border px-4 py-2">{user.name}</td>
                 <td className="border px-4 py-2">{user.email}</td>
                 <td className="border px-4 py-2">
-                    {/* Tampilkan semua role yang dimiliki user dengan warna berbeda */}
-                    {user.roles.map((role) => {
-                      // Tentukan warna berdasarkan nama role
-                      let roleColor;
-                      if (role.name === "pustakawan") {
-                        roleColor = "bg-blue-500"; // Warna untuk pustakawan
-                      } else if (role.name === "anggota") {
-                        roleColor = "bg-green-500"; // Warna untuk anggota
-                      } else {
-                        roleColor = "bg-gray-200"; // Default color untuk role lainnya
-                      }
+                  {/* Tampilkan semua role yang dimiliki user dengan warna berbeda */}
+                  {user.roles.map((role) => {
+                    // Tentukan warna berdasarkan nama role
+                    let roleColor;
+                    if (role.name === "pustakawan") {
+                      roleColor = "bg-blue-500"; // Warna untuk pustakawan
+                    } else if (role.name === "anggota") {
+                      roleColor = "bg-green-500"; // Warna untuk anggota
+                    } else {
+                      roleColor = "bg-gray-200"; // Default color untuk role lainnya
+                    }
 
-                      return (
-                        <span
-                          key={role.id}
-                          className={`inline-block ${roleColor} rounded-full px-3 py-1 text-sm font-semibold text-white mr-2`}
-                        >
-                          {role.name}
-                        </span>
-                      );
-                    })}
+                    return (
+                      <span
+                        key={role.id}
+                        className={`inline-block ${roleColor} rounded-full px-3 py-1 text-sm font-semibold text-white mr-2`}
+                      >
+                        {role.name}
+                      </span>
+                    );
+                  })}
                 </td>
                 <td className="border px-4 py-2">
                   <span
@@ -334,10 +334,10 @@ const handleRoleChange = (e) => {
                         className="text-white cursor-pointer text-lg bg-green-500 rounded-full p-1 mr-2 w-7 h-7"
                       />
                     )}
-           <FaEdit
-  onClick={() => handleUpdate(user)} // Kirim seluruh objek user, bukan hanya user.id
-  className="text-white cursor-pointer text-lg bg-blue-500 rounded-full p-1 mr-2 w-7 h-7"
-/>
+                    <FaEdit
+                      onClick={() => handleUpdate(user)} // Kirim seluruh objek user, bukan hanya user.id
+                      className="text-white cursor-pointer text-lg bg-blue-500 rounded-full p-1 mr-2 w-7 h-7"
+                    />
                     <RiDeleteBin5Line
                       onClick={() => handleDelete(user.id)}
                       className="text-white cursor-pointer w-7 h-7 bg-red-500 rounded-full p-1 mr-2"
@@ -368,22 +368,22 @@ const handleRoleChange = (e) => {
       </div>
 
       {isModalOpen && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-    <div className="bg-white p-6 rounded-lg shadow-md relative">
-      <button
-        className="absolute top-0 right-0 p-2"
-        onClick={handleCloseModal}
-      >
-        Close
-      </button>
-      {selectedBook !== null ? (
-        <UpdateUser user={selectedBook} onClose={handleCloseModal} />
-      ) : (
-        <AddUserModal onClose={handleCloseModal} refreshData={refreshData} />
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-md relative">
+            <button
+              className="absolute top-0 right-0 p-2"
+              onClick={handleCloseModal}
+            >
+              Close
+            </button>
+            {selectedBook !== null ? (
+              <UpdateUser user={selectedBook} onClose={handleCloseModal} />
+            ) : (
+              <AddUserModal onClose={handleCloseModal} refreshData={refreshData} />
+            )}
+          </div>
+        </div>
       )}
-    </div>
-  </div>
-)}
 
       {/* Modal unggah Excel */}
       {isImportModalOpen && (

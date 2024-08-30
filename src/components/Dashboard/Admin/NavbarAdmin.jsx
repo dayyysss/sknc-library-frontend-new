@@ -5,21 +5,26 @@ import { toast } from 'react-hot-toast';
 const DashboardNav = () => {
     const [open, setOpen] = useState(false);
     const [username, setUsername] = useState('');
-    const [profileImage, setProfileImage] = useState(''); // State untuk menyimpan URL gambar profil
+    const [profileImage, setProfileImage] = useState(''); 
 
     useEffect(() => {
         // Ambil nama pengguna dan URL gambar profil dari API
         const fetchUserProfile = async () => {
             try {
-                const response = await fetch(`http://127.0.0.1:8000/api/user/${id}`, { // Pastikan id didefinisikan atau diperoleh dari state/props
+                const userId = localStorage.getItem("userId"); // Ambil id dari localStorage
+                if (!userId) {
+                    throw new Error("User ID not found");
+                }
+
+                const response = await fetch(`http://127.0.0.1:8000/api/user/${userId}`, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem("token")}`
                     }
                 });
                 
                 const data = await response.json();
-                setUsername(data.username); // Asumsi data.username adalah username dari API
-                setProfileImage(data.profile_image_url); // Asumsi data.profile_image_url adalah URL gambar profil dari API
+                setUsername(data.username); 
+                setProfileImage(data.profile_image_url);
             } catch (error) {
                 console.error("Error fetching user profile:", error);
             }
@@ -64,14 +69,14 @@ const DashboardNav = () => {
         <div>
             <div className='flex items-center justify-between h-[70px] shadow-lg px-[25px]'>
                 <div className='flex items-center rounded-[5px]'>
-                    {/* Jika ada elemen tambahan bisa dimasukkan di sini */}
+                    {/* Tambahkan elemen lain di sini */}
                 </div>
                 <div className='flex items-center gap-[20px]'>
                     <div className='flex items-center gap-[25px] border-r-[1px] pr-[25px]'>
-                        {/* Tempat untuk ikon notifikasi atau email jika diperlukan */}
+                        {/* Tempat untuk ikon tambahan */}
                     </div>
                     <div className='flex items-center gap-[15px] relative' onClick={showProfile} >
-                        <p>{username || "Admin"}</p> {/* Tampilkan username jika ada, jika tidak tampilkan "Admin" */}
+                        <p>{username || "Admin"}</p> 
                         <div className='h-[50px] w-[50px] rounded-full bg-[#4E73DF] cursor-pointer flex items-center justify-center relative z-40'>
                             {profileImage ? (
                                 <img 

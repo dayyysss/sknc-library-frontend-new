@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import Chart from 'chart.js/auto';
-import { Button, Table, Pagination, Space, Select, Form, Input } from "antd";
+import { Button, Table, Pagination, Space, Select, Form, Input, Modal } from "antd";
 import { IoPeopleSharp } from "react-icons/io5";
 import UpdateTamu from './UpdateTamu';
 
-const BukuTamu = () => {
+const BukuTamu = (userId, onClose, selectedGuestFromProps, fetchData) => {
   document.title = "Dashboard Admin - Buku Tamu";
   const [guestsToday, setGuestsToday] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -15,22 +15,20 @@ const BukuTamu = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedGuestId, setSelectedGuestId] = useState(null);
   const [selectedGuest, setSelectedGuest] = useState(null);
-  const [selectedGoal, setSelectedGoal] = useState(null);
   const [form] = Form.useForm();
   const [totalGuests, setTotalGuests] = useState(0);
   const pageSize = 10;
-  const nameInputRef = useRef(null);
-
   const identityRef = useRef(null);
 
   useEffect(() => {
     fetchGuestsToday();
-    createChart();
   }, [page]);
 
   useEffect(() => {
-    nameInputRef.current && nameInputRef.current.focus();
-  }, []);
+    if (guestsToday.length > 0) {
+      createChart();
+    }
+  }, [guestsToday]);
 
   const fetchGuestsToday = async () => {
     try {
@@ -139,65 +137,46 @@ const BukuTamu = () => {
     guest.name.toLowerCase().includes(searchKeyword.toLowerCase())
   );
 
-  const data = {
-    labels: ['Bulan Ini', 'Bulan Kemarin', 'Hari Ini'],
-    datasets: [{
-      label: 'My First Dataset',
-      data: [300, 50, 100],
-      backgroundColor: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)', 'rgb(255, 205, 86)'],
-      hoverOffset: 4
-    }]
-  };
-
-  const config = {
-    type: 'doughnut',
-    data: data,
-    options: {
-      aspectRatio: 1.6,
-      maintainAspectRatio: true,
-    },
-  };
-
-  const createChart = () => {
-    if (chartRef && chartRef.current) {
-      if (chartRef.current.chart) {
-        chartRef.current.chart.destroy();
-      }
-      chartRef.current.chart = new Chart(chartRef.current, config);
-    }
-  };
-
-  const getTodayDate = () => {
-    const today = new Date();
-    const day = String(today.getDate()).padStart(2, '0');
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const year = today.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
-
-  const handleSummary = () => {
-    console.log("Tombol Rekapitulasi Pengunjung diklik");
-  };
-
   const handleEdit = (guest) => {
     setSelectedGuest(guest);
     setSelectedGuestId(guest.id);
     setIsModalOpen(true);
   };
 
-  const [goalOptions, setGoalOptions] = useState([
-    { label: "Membaca Buku", value: "Membaca Buku" },
-    { label: "Meminjam Buku", value: "Meminjam Buku" },
-    { label: "Mengerjakan Tugas", value: "Mengerjakan Tugas" },
-    { label: "Diskusi", value: "Diskusi" },
-  ]);
+  const createChart = () => {
+    const ctx = chartRef.current.getContext('2d');
+    
+    // Hapus chart lama jika sudah ada
+    if (chartRef.current.chartInstance) {
+      chartRef.current.chartInstance.destroy();
+    }
 
-  const handleGoalChange = (value) => {
-    setSelectedGoal(value);
-    setGuest((prevState) => ({
-      ...prevState,
-      goals: value,
-    }));
+    chartRef.current.chartInstance = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Membaca Buku', 'Meminjam Buku', 'Mengerjakan Tugas', 'Diskusi'],
+        datasets: [{
+          label: 'Jumlah Pengunjung',
+          data: [
+            guestsToday.filter(guest => guest.goals === 'Membaca Buku').length,
+            guestsToday.filter(guest => guest.goals === 'Meminjam Buku').length,
+            guestsToday.filter(guest => guest.goals === 'Mengerjakan Tugas').length,
+            guestsToday.filter(guest => guest.goals === 'Diskusi').length
+          ],
+          backgroundColor: [
+            'rgba(75, 192, 192, 0.6)',
+            'rgba(54, 162, 235, 0.6)',
+            'rgba(255, 206, 86, 0.6)',
+            'rgba(255, 99, 132, 0.6)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
   };
 
   const handleAddGuest = () => {
@@ -232,8 +211,12 @@ const BukuTamu = () => {
               <Form.Item name="goals">
                 <Select
                   placeholder="Pilih Tujuan"
-                  options={goalOptions}
-                  onChange={handleGoalChange}
+                  options={[
+                    { label: "Membaca Buku", value: "Membaca Buku" },
+                    { label: "Meminjam Buku", value: "Meminjam Buku" },
+                    { label: "Mengerjakan Tugas", value: "Mengerjakan Tugas" },
+                    { label: "Diskusi", value: "Diskusi" },
+                  ]}
                 />
               </Form.Item>
               <Form.Item name="telp">
@@ -255,55 +238,33 @@ const BukuTamu = () => {
           </div>
         </div>
 
-        <div className="mt-8 bg-white p-4 rounded-md shadow-md">
-          <h1 className="text-2xl text-start font-semibold mb-4 text-blue-400 flex items-center">
-            <IoPeopleSharp className="mr-2 text-blue-400" /> Daftar Tamu
-          </h1>
-
-          <div className="flex items-center mb-4">
-            <Input
-              type="text"
-              placeholder="Cari data tamu berdasarkan nama..."
-              value={searchKeyword}
-              onChange={(e) => setSearchKeyword(e.target.value)}
-              className="border p-2 rounded-md mr-10"
-            />
-            <div className="flex justify-end flex-grow">
-              <div className="flex items-center gap-2">
-                <Button
-                  type="primary"
-                  onClick={handleAddGuest}
-                  className="bg-blue-500"
-                >
-                  Tambah Tamu
-                </Button>
-              </div>
-            </div>
+        <div className="mt-8">
+          <h2 className="font-semibold text-lg">Daftar Pengunjung Hari Ini</h2>
+          <div style={{ overflowX: 'auto' }}>
+            <Table
+              dataSource={filteredGuests}
+              rowKey="id"
+              pagination={false}
+              scroll={{ x: 1000 }}
+            >
+              <Table.Column title="Nama" dataIndex="name" />
+              <Table.Column title="Kelas" dataIndex="class" />
+              <Table.Column title="Jurusan" dataIndex="departemen" />
+              <Table.Column title="Email" dataIndex="email" />
+              <Table.Column title="Tujuan" dataIndex="goals" />
+              <Table.Column title="No Handphone" dataIndex="telp" />
+              <Table.Column
+                title="Aksi"
+                render={(text, record) => (
+                  <Space>
+                    <Button type="primary" shape="round" className="bg-blue-500" onClick={() => handleEdit(record)}>Edit</Button>
+                    <Button danger shape="round" onClick={() => handleDelete(record.id)}>Delete</Button>
+                  </Space>
+                )}
+              />
+            </Table>
           </div>
-          <Table
-            dataSource={filteredGuests.map((guest, index) => ({
-              ...guest,
-              key: (page - 1) * pageSize + index + 1,
-            }))}
-            pagination={false}
-          >
-            <Table.Column title="No" dataIndex="key" />
-            <Table.Column title="Nama Pengunjung" dataIndex="name" />
-            <Table.Column title="Kelas" dataIndex="class" />
-            <Table.Column title="Jurusan" dataIndex="departemen" />
-            <Table.Column title="Email" dataIndex="email" />
-            <Table.Column title="Tujuan" dataIndex="goals" />
-            <Table.Column title="No Handphone" dataIndex="telp" />
-            <Table.Column
-              title="Aksi"
-              render={(text, record) => (
-                <Space>
-                  <Button type="primary" shape="round" className="bg-blue-500" onClick={() => handleEdit(record)}>Edit</Button>
-                  <Button danger shape="round" onClick={() => handleDelete(record.id)}>Delete</Button>
-                </Space>
-              )}
-            />
-          </Table>
+
           <Pagination
             className="mt-5"
             current={page}
@@ -311,13 +272,21 @@ const BukuTamu = () => {
             pageSize={pageSize}
             onChange={(page) => setPage(page)}
           />
+
           {isModalOpen && (
-            <UpdateTamu
-              userId={selectedGuestId}
-              selectedGuest={selectedGuest}
-              onClose={() => setIsModalOpen(false)}
-              fetchData={fetchGuestsToday}
-            />
+            <Modal
+              title="Update Tamu"
+              open={isModalOpen}
+              onCancel={() => setIsModalOpen(false)}
+              footer={null}
+            >
+              <UpdateTamu
+                userId={selectedGuestId}
+                selectedGuest={selectedGuest}
+                onClose={() => setIsModalOpen(false)}
+                fetchData={fetchGuestsToday}
+              />
+            </Modal>
           )}
         </div>
       </div>
