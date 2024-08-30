@@ -238,15 +238,20 @@ const BukuTamu = (userId, onClose, selectedGuestFromProps, fetchData) => {
           </div>
         </div>
 
-        <div className="mt-8">
-          <h2 className="font-semibold text-lg">Daftar Pengunjung Hari Ini</h2>
+        <div className="mt-8 bg-white p-4 rounded-md shadow-md">
+          <h1 className="text-2xl text-start font-semibold mb-4 text-blue-400 flex items-center">
+            <IoPeopleSharp className="mr-2 text-blue-400" /> Daftar Tamu
+          </h1>
           <div style={{ overflowX: 'auto' }}>
-            <Table
-              dataSource={filteredGuests}
-              rowKey="id"
+          <Table
+              dataSource={filteredGuests.map((guest, index) => ({
+                ...guest,
+                key: (page - 1) * pageSize + index + 1,
+              }))}
               pagination={false}
-              scroll={{ x: 1000 }}
+              style={{ minWidth: 800 }} 
             >
+               <Table.Column title="No" dataIndex="key" />
               <Table.Column title="Nama" dataIndex="name" />
               <Table.Column title="Kelas" dataIndex="class" />
               <Table.Column title="Jurusan" dataIndex="departemen" />
