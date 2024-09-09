@@ -1,27 +1,21 @@
-import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
-import CloseIcon from "@mui/icons-material/Close";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
-import LanguageIcon from "@mui/icons-material/Language";
-import LightModeIcon from "@mui/icons-material/LightMode";
-import LogoutIcon from "@mui/icons-material/Logout";
-import MenuIcon from "@mui/icons-material/Menu";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import SearchIcon from "@mui/icons-material/Search";
-import React, { useContext, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import BookIcon from "@mui/icons-material/Book";
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
-import "./navbar.scss";
-import admin from "../../../assets/images/admin_pic.jpg";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import CloseIcon from "@mui/icons-material/Close";
+import MenuIcon from "@mui/icons-material/Menu";
+import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import { toast } from "react-hot-toast";
+import "./navbar.scss";
 
 function Navbar() {
   const [toggle, setToggle] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [userImage, setUserImage] = useState("");
 
   const handleToggle = () => {
     setToggle(!toggle);
@@ -29,17 +23,46 @@ function Navbar() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user_id");
     toast.success("Logout berhasil!", {
       position: "top-center",
     });
     setTimeout(() => {
       window.location.href = "/";
-    }, 2000); 
+    }, 2000);
   };
 
   const toggleProfileDropdown = () => {
-    setShowProfileDropdown(!showProfileDropdown); 
+    setShowProfileDropdown(!showProfileDropdown);
   };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const storedUserId = localStorage.getItem("user_id");
+      if (!storedUserId) {
+        toast.error('User ID tidak ditemukan.');
+        return;
+      }
+
+      try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/user/${storedUserId}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem("token")}`,
+          }
+        });
+
+        if (response.data.success) {
+          setUserImage(response.data.data.image);
+        } else {
+          toast.error('Gagal mengambil data pengguna.');
+        }
+      } catch (error) {
+        toast.error('Terjadi kesalahan saat mengambil data pengguna.');
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   return (
     <div className="navbar">
@@ -57,27 +80,6 @@ function Navbar() {
         </div>
 
         <div className="item_lists">
-          {/* <div className="item item_lan">
-            <LanguageIcon className="item_icon" />
-            <p>English</p>
-          </div> */}
-          {/* <div className="item">
-            {!darkMode ? (
-              <DarkModeIcon
-                className="item_icon"
-                onClick={() => dispatch({ type: "TOGGLE" })}
-              />
-            ) : (
-              <LightModeIcon
-                className="item_icon white"
-                onClick={() => dispatch({ type: "TOGGLE" })}
-              />
-            )}
-          </div> */}
-          {/* <div className="item">
-            <FullscreenExitIcon className="item_icon" />
-          </div> */}
-
           <div className="item">
             <NotificationsNoneIcon className="item_icon" />
             <span className="badge">0</span>
@@ -87,11 +89,11 @@ function Navbar() {
             <div className="item">
               <img
                 className="admin_pic"
-                src={admin}
+                src={userImage || 'path/to/default/image.svg'} // Gambar default jika tidak ada
                 alt="admin"
                 onClick={toggleProfileDropdown}
               />
-              {showProfileDropdown && ( 
+              {showProfileDropdown && (
                 <div className='bg-white border h-[45px] w-[120px] absolute bottom-[-50px] z-20 right-0 pt-[8px] space-y-[10px] text-center'>
                   <ul>
                     <li onClick={handleLogout} className="cursor-pointer hover:text-red-500">Keluar</li>
