@@ -1,45 +1,73 @@
+import React, { useEffect, useState, Fragment } from 'react';
 import { IoIosSearch, IoIosNotificationsOutline } from "react-icons/io";
-import UserImg from "./../../../assets/images/avatar.svg";
 import { Popover, Transition, Menu } from "@headlessui/react";
-import { Fragment } from "react";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 function Header() {
   const navigate = useNavigate();
+  const [userImage, setUserImage] = useState("");
+  const [userId, setUserId] = useState("");
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const storedUserId = localStorage.getItem("user_id");
+      setUserId(storedUserId);
+      if (!storedUserId) {
+        toast.error('User ID tidak ditemukan.');
+        return;
+      }
+
+      try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/user/${storedUserId}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem("token")}`,
+          }
+        });
+        
+        if (response.data.success) {
+          setUserImage(response.data.data.image);
+        } else {
+          toast.error('Gagal mengambil data pengguna.');
+        }
+      } catch (error) {
+        toast.error('Terjadi kesalahan saat mengambil data pengguna.');
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleLogout = async () => {
     try {
-        const response = await fetch('http://127.0.0.1:8000/api/logout', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem("token")}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Logout failed');
+      const response = await fetch('http://127.0.0.1:8000/api/logout', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem("token")}`,
+          'Content-Type': 'application/json'
         }
+      });
 
-        localStorage.removeItem("token");
-        document.cookie = "name=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        document.cookie = "roles=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        
-        toast.success("Logout berhasil!", {
-            position: "top-center",
-        });
-        setTimeout(() => {
-            window.location.href = "/";
-        }, 2000);
+      if (!response.ok) {
+        throw new Error('Logout failed');
+      }
+
+      localStorage.removeItem("token");
+      localStorage.removeItem("user_id");
+
+      toast.success("Logout berhasil!", {
+        position: "top-center",
+      });
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 2000);
     } catch (error) {
-        toast.error("Logout gagal!", {
-            position: "top-center",
-        });
+      toast.error("Logout gagal!", {
+        position: "top-center",
+      });
     }
-};
+  };
 
   return (
     <div className="block md:flex items-center justify-end px-8 py-3 bg-neutral-50 mb-2">
@@ -85,7 +113,7 @@ function Header() {
             <div>
               <Menu.Button className="">
                 <img
-                  src={UserImg}
+                  src={userImage || 'path/to/default/image.svg'} 
                   alt="User"
                   className="object-cover rounded-full cursor-pointer w-full"
                 />
