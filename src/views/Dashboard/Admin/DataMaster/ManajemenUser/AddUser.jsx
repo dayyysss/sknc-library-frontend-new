@@ -1,46 +1,41 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
+import { Modal, Form, Input, Button, Select, Upload } from "antd";
 import axios from "axios";
-import Swal from "sweetalert2"; 
+import Swal from "sweetalert2";
 
-const AddUserModal = ({ onClose }) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    password_confirmation: "",
-    roles: "",
-  });
+const { Option } = Select;
 
-  const modalRef = useRef(null);
+const AddUserModal = ({ onClose, refreshData }) => {
+  const [form] = Form.useForm();
+  const [fileList, setFileList] = useState([]);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const getAuthToken = () => {
-    const token = localStorage.getItem("token");
+  const handleFinish = async (values) => {
+    const token = getAuthToken();
     if (!token) {
       console.error("Token not available. Please login.");
-      return null;
+      return;
     }
-    return token;
-  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    const formData = new FormData();
+    Object.keys(values).forEach(key => {
+      formData.append(key, values[key]);
+    });
+
+    fileList.forEach(file => {
+      formData.append('image', file.originFileObj);
+    });
+
     try {
-      const token = getAuthToken();
-      if (!token) {
-        console.error("Token not available. Please login.");
-        return;
-      }
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
         },
       };
+
       await axios.post("http://127.0.0.1:8000/api/user/create", formData, config);
-      onClose(); 
+      onClose();
+      refreshData();
       Swal.fire({
         icon: "success",
         title: "Berhasil",
@@ -51,110 +46,103 @@ const AddUserModal = ({ onClose }) => {
         Swal.fire({
           icon: "error",
           title: "Gagal",
-          text: error.response.data.email[0], 
+          text: error.response.data.email[0],
         });
       } else {
         console.error("Error adding user:", error);
       }
     }
-  };  
+  };
 
-  const handleCloseModal = (e) => {
-    if (modalRef.current && !modalRef.current.contains(e.target)) {
-      onClose();
-      refreshData(); 
+  const handleFileChange = ({ fileList }) => setFileList(fileList);
+
+  const getAuthToken = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("Token not available. Please login.");
+      return null;
     }
-  };  
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleCloseModal);
-
-    return () => {
-      document.removeEventListener("mousedown", handleCloseModal);
-    };
-  }, []);
+    return token;
+  };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-      <div
-        ref={modalRef}
-        className="bg-white w-full max-w-md p-6 rounded-lg shadow-lg"
+    <Modal
+      title="Tambah Pengguna"
+      visible={true}
+      onCancel={onClose}
+      footer={null}
+      width={600}
+    >
+      <Form
+        form={form}
+        onFinish={handleFinish}
+        layout="vertical"
+        initialValues={{
+          roles: "",
+        }}
       >
-        <h2 className="text-2xl font-bold mb-4 text-center">Tambah Pengguna</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Nama"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Email"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Kata Sandi"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <input
-              type="password"
-              name="password_confirmation"
-              value={formData.password_confirmation}
-              onChange={handleChange}
-              placeholder="Konfirmasi Kata Sandi"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <select
-              name="roles"
-              value={formData.roles}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-              required
-            >
-              <option value="">Pilih Peran</option>
-              <option value="pustakawan">Pustakawan</option>
-              <option value="anggota">Anggota</option>
-            </select>
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+        <Form.Item
+          name="name"
+          label="Nama"
+          rules={[{ required: true, message: 'Nama diperlukan' }]}
+        >
+          <Input placeholder="Nama" />
+        </Form.Item>
+        <Form.Item
+          name="email"
+          label="Email"
+          rules={[{ required: true, type: 'email', message: 'Email diperlukan' }]}
+        >
+          <Input placeholder="Email" />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          label="Kata Sandi"
+          rules={[{ required: true, message: 'Kata Sandi diperlukan' }]}
+        >
+          <Input.Password placeholder="Kata Sandi" />
+        </Form.Item>
+        <Form.Item
+          name="password_confirmation"
+          label="Konfirmasi Kata Sandi"
+          rules={[{ required: true, message: 'Konfirmasi Kata Sandi diperlukan' }]}
+        >
+          <Input.Password placeholder="Konfirmasi Kata Sandi" />
+        </Form.Item>
+        <Form.Item
+          name="roles"
+          label="Peran"
+          rules={[{ required: true, message: 'Peran diperlukan' }]}
+        >
+          <Select placeholder="Pilih Peran">
+            <Option value="pustakawan">Pustakawan</Option>
+            <Option value="anggota">Anggota</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item
+          name="image"
+          label="Foto Profil"
+          valuePropName="fileList"
+          getValueFromEvent={(e) => e.fileList}
+        >
+          <Upload
+            listType="picture"
+            fileList={fileList}
+            onChange={handleFileChange}
+            beforeUpload={() => false}
+            maxCount={1}
           >
+            <Button>Upload Foto</Button>
+          </Upload>
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" style={{ marginRight: 8 }}>
             Tambah Pengguna
-          </button>
-          <button
-            type="button"
-            onClick={onClose}
-            className="mt-2 w-full bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400 focus:outline-none focus:bg-gray-400"
-          >
-            Batal
-          </button>
-        </form>
-      </div>
-    </div>
+          </Button>
+          <Button onClick={onClose}>Batal</Button>
+        </Form.Item>
+      </Form>
+    </Modal>
   );
 };
 

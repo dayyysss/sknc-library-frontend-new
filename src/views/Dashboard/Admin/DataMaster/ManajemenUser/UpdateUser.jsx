@@ -1,75 +1,42 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { Modal, Form, Input, Select, Button, Upload } from "antd";
 import axios from "axios";
 import Swal from 'sweetalert2';
 
-const UpdateUser = ({ userId, onClose, user }) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    password_confirmation: "",
-    roles: "",
-    status: "",
-    image: null,
-  });
-  const [error, setError] = useState("");
+const { Option } = Select;
 
-  const modalRef = useRef(null);
+const UpdateUser = ({ userId, onClose, user }) => {
+  const [form] = Form.useForm();
+  const [fileList, setFileList] = useState([]);
 
   useEffect(() => {
     if (user) {
-      setFormData({
+      form.setFieldsValue({
         name: user.name || "",
         email: user.email || "",
-        password: "",
-        password_confirmation: "",
         roles: user.roles || "",
-        status: user.status || "",  // Initialize status from user data
+        status: user.status || "",
       });
     }
-  }, [user]);
+  }, [user, form]);
 
-  const handleChange = (e) => {
-    if (e.target.type === "file") {
-      setFormData({ ...formData, [e.target.name]: e.target.files[0] });
-    } else {
-      setFormData({ ...formData, [e.target.name]: e.target.value });
-    }
-  };
-
-  const validateForm = () => {
-    if (!formData.email || !formData.password) {
-      setError("Email dan password tidak boleh kosong.");
-      return false;
-    }
-    if (!formData.email.includes("@")) {
-      setError("Email harus berisi karakter @.");
-      return false;
-    }
-    if (formData.password !== formData.password_confirmation) {
-      setError("Konfirmasi password tidak cocok.");
-      return false;
-    }
-    return true;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) {
+  const handleFinish = async (values) => {
+    const token = getAuthToken();
+    if (!token) {
+      console.error("Token not available. Please login.");
       return;
     }
+
+    const formData = new FormData();
+    Object.keys(values).forEach(key => {
+      formData.append(key, values[key]);
+    });
+
+    fileList.forEach(file => {
+      formData.append('image', file.originFileObj);
+    });
+
     try {
-      const token = getAuthToken();
-      if (!token) {
-        console.error("Token not available. Please login.");
-        return;
-      }
-
-      const formDataWithImage = new FormData();
-      Object.keys(formData).forEach((key) => {
-        formDataWithImage.append(key, formData[key]);
-      });
-
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -79,7 +46,7 @@ const UpdateUser = ({ userId, onClose, user }) => {
 
       await axios.post(
         `http://127.0.0.1:8000/api/user/${userId}/update`,
-        formDataWithImage,
+        formData,
         config
       );
 
@@ -95,19 +62,7 @@ const UpdateUser = ({ userId, onClose, user }) => {
     }
   };
 
-  const handleCloseModal = (e) => {
-    if (modalRef.current && !modalRef.current.contains(e.target)) {
-      onClose();
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleCloseModal);
-
-    return () => {
-      document.removeEventListener("mousedown", handleCloseModal);
-    };
-  }, []);
+  const handleFileChange = ({ fileList }) => setFileList(fileList);
 
   const getAuthToken = () => {
     const token = localStorage.getItem("token");
@@ -119,99 +74,88 @@ const UpdateUser = ({ userId, onClose, user }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-      <div
-        ref={modalRef}
-        className="bg-white w-full max-w-md p-6 rounded-lg shadow-lg"
+    <Modal
+      title="Memperbarui Pengguna"
+      visible={true}
+      onCancel={onClose}
+      footer={null}
+      width={600}
+    >
+      <Form
+        form={form}
+        onFinish={handleFinish}
+        layout="vertical"
       >
-        <h2 className="text-2xl font-bold mb-4 text-center">Memperbarui Pengguna</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Nama"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <input
-              type="text"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Email"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Kata Sandi"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-            />
-          </div>
-          <div className="mb-4">
-            <input
-              type="password"
-              name="password_confirmation"
-              value={formData.password_confirmation}
-              onChange={handleChange}
-              placeholder="Konfirmasi Kata Sandi"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-            />
-          </div>
-          <div className="mb-4">
-            <select
-              name="roles"
-              value={formData.roles}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-              required
-            >
-              <option value="">Pilih Role</option>
-              <option value="admin">Admin</option>
-              <option value="user">User</option>
-              {/* Tambahkan opsi role lainnya jika diperlukan */}
-            </select>
-          </div>
-          <div className="mb-4">
-            <select
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-              required
-            >
-              <option value="">Pilih Status</option>
-              <option value="aktif">Aktif</option>
-              <option value="nonaktif">Nonaktif</option>
-            </select>
-          </div>
-          {error && <p className="text-red-500">{error}</p>}
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+        <Form.Item
+          name="name"
+          label="Nama"
+          rules={[{ required: true, message: 'Nama diperlukan' }]}
+        >
+          <Input placeholder="Nama" />
+        </Form.Item>
+        <Form.Item
+          name="email"
+          label="Email"
+          rules={[{ required: true, type: 'email', message: 'Email diperlukan' }]}
+        >
+          <Input placeholder="Email" />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          label="Kata Sandi"
+        >
+          <Input.Password placeholder="Kata Sandi" />
+        </Form.Item>
+        <Form.Item
+          name="password_confirmation"
+          label="Konfirmasi Kata Sandi"
+        >
+          <Input.Password placeholder="Konfirmasi Kata Sandi" />
+        </Form.Item>
+        <Form.Item
+          name="roles"
+          label="Peran"
+          rules={[{ required: true, message: 'Peran diperlukan' }]}
+        >
+          <Select placeholder="Pilih Peran">
+            <Option value="pustakawan">Pustakawan</Option>
+            <Option value="anggota">Anggota</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item
+          name="status"
+          label="Status"
+          rules={[{ required: true, message: 'Status diperlukan' }]}
+        >
+          <Select placeholder="Pilih Status">
+            <Option value="aktif">Aktif</Option>
+            <Option value="nonaktif">Nonaktif</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item
+          name="image"
+          label="Foto Profil"
+          valuePropName="fileList"
+          getValueFromEvent={(e) => e.fileList}
+        >
+          <Upload
+            listType="picture"
+            fileList={fileList}
+            onChange={handleFileChange}
+            beforeUpload={() => false}
+            maxCount={1}
           >
+            <Button>Upload Foto</Button>
+          </Upload>
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" style={{ marginRight: 8 }}>
             Perbaharui Pengguna
-          </button>
-          <button
-            type="button"
-            onClick={onClose}
-            className="mt-2 w-full bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400 focus:outline-none focus:bg-gray-400"
-          >
-            Batal
-          </button>
-        </form>
-      </div>
-    </div>
+          </Button>
+          <Button onClick={onClose}>Batal</Button>
+        </Form.Item>
+      </Form>
+    </Modal>
   );
 };
 

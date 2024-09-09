@@ -27,7 +27,7 @@ const DetailBook = ({ book, closeModal }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
-    };
+    };  
   }, []);
 
   const { status, colorClass } = getStatusColor(book.stock_amount);

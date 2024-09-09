@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Pagination from "@mui/material/Pagination";
-import Alert from '@mui/material/Alert';
-import Stack from "@mui/material/Stack";
+import { Pagination, Button, Alert, Modal, Input } from "antd";
 import { FiInfo } from "react-icons/fi";
 import axios from "axios";
 import { RiDeleteBin5Line } from "react-icons/ri";
@@ -10,8 +8,10 @@ import { FaEdit } from "react-icons/fa";
 import Swal from "sweetalert2";
 import UpdateBook from "./UpdateBook";
 import { PiMicrosoftExcelLogoLight, PiExportLight } from "react-icons/pi";
-import DetailBook from "./DetailBook"
+import DetailBook from "./DetailBook";
 import ImportBook from "./ImportBook";
+
+const { Search } = Input;
 
 const BookList = () => {
   document.title = "Dashboard Admin - Data Buku";
@@ -93,19 +93,18 @@ const BookList = () => {
     const selectedBook = books.find(book => book.id === id);
     if (selectedBook) {
       setSelectedBook(selectedBook);
-      setIsEditModalOpen(true); 
+      setIsEditModalOpen(true);
     } else {
       console.error("Book not found!");
     }
   };
 
-  const handleChangePage = (event, value) => {
-    setPage(value);
+  const handleChangePage = (page) => {
+    setPage(page);
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    setSearchKeyword(query); 
+  const handleSearch = (value) => {
+    setSearchKeyword(value);
   };
 
   const handleBookClick = async (bookId) => {
@@ -181,59 +180,53 @@ const BookList = () => {
 
   return (
     <>
-      <div className="min-h-screen px-[25px] pt-[25px] pb-[auto] bg-[#F8F9FC] overflow-auto">
+      <div className="min-h-screen px-6 pt-6 pb-6 bg-[#F8F9FC] overflow-auto">
         <div className="flex items-center justify-between">
-          <h1 className="text-[28px] leading-[34px] font-normal text-[#5a5c69] cursor-pointer">
+          <h1 className="text-2xl font-semibold text-[#5a5c69]">
             Data Buku
           </h1>
-          <div className="flex">
-          <Link
-              to="/dashboard-admin/buku/tambah-buku"
-              className="bg-blue-500 h-[32px] rounded-[3px] text-white flex items-center justify-center px-[8px] mr-4"
-            >
-              Tambah Buku
-            </Link>
-            <button
-              className="bg-slate-500 h-[32px] rounded-[3px] text-white flex items-center justify-center px-[8px] mr-4"
+          <div className="flex space-x-4">
+            <Button type="default"
+              className="bg-blue-500 text-white hover:bg-blue-600">
+              <Link
+                to="/dashboard-admin/buku/tambah-buku"
+                className="ant-btn ant-btn-primary"
+              >
+                Tambah Buku
+              </Link>
+            </Button>
+            <Button
+              type="default"
               onClick={exportAll}
             >
               <PiExportLight className="text-xl mr-2" />
-              Export User
-            </button>
-            <button
+              Export Buku
+            </Button>
+            <Button
+              type="default"
+              className="bg-green-500 text-white hover:bg-green-600"
               onClick={handleImportExcel}
-              className="bg-green-500 h-[32px] rounded-[3px] text-white flex items-center justify-center px-[8px]"
             >
               <PiMicrosoftExcelLogoLight className="text-xl mr-2" />
               Import Excel
-            </button>
+            </Button>
           </div>
         </div>
         <div className="mt-4">
-          <form onSubmit={handleSearch} className="w-full max-w-md mx-auto">
-            <div className="flex items-center border border-slate-500 rounded">
-              <input
-                type="text"
-                className="w-full py-2 px-4 outline-none"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Cari data buku di sini..."
-              />
-              <button
-                onClick={handleSearch}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              >
-                Cari
-              </button>
-            </div>
-          </form>
+          <Search
+            placeholder="Cari data buku di sini..."
+            onSearch={handleSearch}
+            enterButton
+          />
         </div>
         <p className="mt-4 text-left">Total Buku : {totalBooks}</p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mt-4">
           {filteredBooks.length === 0 && (
-            <Alert variant="outlined" severity="warning">
-              Tidak ada data buku yang tersedia!
-            </Alert>
+            <Alert
+              message="Tidak ada data buku yang tersedia!"
+              type="warning"
+              showIcon
+            />
           )}
           {filteredBooks.map((book, index) => (
             <div key={index + 1} className="bg-white p-4 rounded shadow-md hover:shadow-lg flex flex-col">
@@ -245,10 +238,10 @@ const BookList = () => {
               </button>
               <p className="text-gray-600 mb-2 flex-grow text-center">{book.writer}</p>
               <div>
-                  <span className="text-sm font-medium text-gray-500">
-                    Stok Buku : {book.stock_amount}
-                  </span>
-                </div>
+                <span className="text-sm font-medium text-gray-500">
+                  Stok Buku : {book.stock_amount}
+                </span>
+              </div>
               <div className="flex justify-between items-center mt-2">
 
                 <div className="flex space-x-2">
@@ -274,44 +267,47 @@ const BookList = () => {
               </div>
             </div>
           ))}
+
         </div>
         <p className="text-left mt-8">
           Page: {page} of {totalPages}
         </p>
-        <div className="flex justify-center items-center mb-9" aria-label="pagination">
-          <Stack spacing={2}>
-            <Pagination
-              count={totalPages}
-              page={page}
-              onChange={handleChangePage}
-              color="primary"
-            />
-          </Stack>
+        <div className="flex justify-center items-center mb-9">
+          <Pagination
+            current={page}
+            total={totalPages * 10} // Assuming 10 items per page
+            onChange={handleChangePage}
+            showSizeChanger={false}
+          />
         </div>
       </div>
 
-      {isEditModalOpen && selectedBook && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="relative bg-white p-6 rounded-lg shadow-md">
-            <UpdateBook book={selectedBook} onClose={() => setIsEditModalOpen(false)} />
-          </div>
-        </div>
-      )}
+      <Modal
+        title="Update Book"
+        visible={isEditModalOpen}
+        onCancel={() => setIsEditModalOpen(false)}
+        footer={null}
+      >
+        {selectedBook && <UpdateBook book={selectedBook} onClose={() => setIsEditModalOpen(false)} />}
+      </Modal>
 
-      {isDetailModalOpen && selectedBook && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <DetailBook book={selectedBook} closeModal={() => setIsDetailModalOpen(false)} />
-        </div>
-      )}
+      <Modal
+        title="Detail Book"
+        visible={isDetailModalOpen}
+        onCancel={() => setIsDetailModalOpen(false)}
+        footer={null}
+        >
+        {selectedBook && <DetailBook book={selectedBook} closeModal={() => setIsDetailModalOpen(false)} />}
+      </Modal>
 
-      {/* Modal unggah Excel */}
-      {isImportModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <ImportBook onClose={handleCloseImportModal} />
-          </div>
-        </div>
-      )}
+      <Modal
+        title="Import Book"
+        visible={isImportModalOpen}
+        onCancel={handleCloseImportModal}
+        footer={null}
+      >
+        <ImportBook onClose={handleCloseImportModal} />
+      </Modal>
     </>
   );
 };

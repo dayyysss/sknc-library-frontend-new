@@ -1,22 +1,17 @@
 // ImportExcel.jsx
 import React, { useRef, useEffect, useState } from 'react';
-import axios from "axios";
-import Swal from 'sweetalert2';
+import axios from 'axios';
+import { Modal, Upload, message, Button } from 'antd';
+import { InboxOutlined } from '@ant-design/icons';
+
+const { Dragger } = Upload;
 
 const ImportExcel = ({ onClose, refreshData }) => {
-  const fileInputRef = useRef();
-  const modalRef = useRef();
-  const [file, setFile] = useState(null);
+  const [fileList, setFileList] = useState([]);
 
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    setFile(selectedFile);
-    console.log("File yang diunggah:", selectedFile);
-  };
-
-  const handleSubmit = async () => {
+  const handleUpload = async (file) => {
     if (!file) {
-      Swal.fire('Error', 'Please select a file', 'error');
+      message.error('Please select a file');
       return;
     }
 
@@ -25,7 +20,7 @@ const ImportExcel = ({ onClose, refreshData }) => {
       !file.name.endsWith(".xls") &&
       !file.name.endsWith(".csv")
     ) {
-      Swal.fire('Error', 'File must be in Excel format (XLSX or XLS) or CSV format', 'error');
+      message.error('File must be in Excel format (XLSX or XLS) or CSV format');
       return;
     }
 
@@ -35,7 +30,7 @@ const ImportExcel = ({ onClose, refreshData }) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        Swal.fire('Error', 'Token not found. Please log in.', 'error');
+        message.error('Token not found. Please log in.');
         return;
       }
 
@@ -51,29 +46,26 @@ const ImportExcel = ({ onClose, refreshData }) => {
       );
 
       if (response.status === 200) {
-        Swal.fire('Success', 'Data pengguna berhasil diimport!', 'success');
+        message.success('Data pengguna berhasil diimport!');
         refreshData();
         onClose();
       } else {
-        Swal.fire('Error', 'Import failed. Please try again.', 'error');
+        message.error('Import failed. Please try again.');
       }
     } catch (error) {
       if (error.response) {
-        Swal.fire('Error', `Import failed: ${error.response.data.message}`, 'error');
-        console.error("Response error:", error.response);
+        message.error(`Import failed: ${error.response.data.message}`);
       } else if (error.request) {
-        Swal.fire('Error', 'No response from server. Please try again.', 'error');
-        console.error("Request error:", error.request);
+        message.error('No response from server. Please try again.');
       } else {
-        Swal.fire('Error', `Error: ${error.message}`, 'error');
-        console.error("Error:", error.message);
+        message.error(`Error: ${error.message}`);
       }
     }
   };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
+      if (!modalRef.current.contains(event.target)) {
         onClose();
       }
     };
@@ -89,36 +81,47 @@ const ImportExcel = ({ onClose, refreshData }) => {
     onClose();
   };
 
+  const uploadProps = {
+    name: 'file',
+    multiple: false,
+    customRequest: ({ file, onSuccess, onError }) => {
+      handleUpload(file)
+        .then(() => onSuccess())
+        .catch(err => onError(err));
+    },
+    onChange(info) {
+      setFileList(info.fileList);
+    },
+    onDrop(e) {
+      console.log('Dropped files', e.dataTransfer.files);
+    },
+    showUploadList: false,
+  };
+
   return (
-    <div ref={modalRef} className="flex flex-col items-center justify-center p-6 bg-white rounded-lg shadow-lg">
-      <h2 className="text-2xl font-semibold mb-6">Import Data Menggunakan Excel</h2>
-      <p className="text-gray-600 mb-4">
-        File mungkin dikompresi (gzip, zip) atau tidak terkompresi.
-        Nama file yang dikompresi harus diakhiri dengan .[format].[kompresi]. Contoh: .xlsx .xls .csv
-      </p>
-      <input
-        type="file"
-        accept=".xls,.xlsx,.csv"
-        onChange={handleFileChange}
-        ref={fileInputRef}
-        className="border border-gray-400 rounded-md py-2 px-4 mb-4"
-      />
-      <p className="text-gray-600 mb-4">Anda juga dapat seret dan lepaskan file di halaman manapun.</p>
-      <div className="flex">
-        <button
-          className="bg-blue-500 text-white py-2 px-4 rounded-md mr-4 hover:bg-blue-600"
-          onClick={handleSubmit}
-        >
-          Unggah
-        </button>
-        <button
-          className="bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400"
-          onClick={handleCancel}
-        >
+    <Modal
+      title="Import Data Menggunakan Excel"
+      visible={true}
+      onCancel={handleCancel}
+      footer={[
+        <Button key="back" onClick={handleCancel}>
           Batal
-        </button>
-      </div>
-    </div>
+        </Button>,
+        <Button key="submit" type="primary" onClick={() => handleUpload(fileList[0]?.originFileObj)}>
+          Unggah
+        </Button>
+      ]}
+    >
+      <Dragger {...uploadProps}>
+        <p className="ant-upload-drag-icon">
+          <InboxOutlined />
+        </p>
+        <p className="ant-upload-text">Klik atau seret file ke area ini untuk mengunggah</p>
+        <p className="ant-upload-hint">
+        File mungkin dikompresi (gzip, zip) atau tidak terkompresi. Nama file yang dikompresi harus diakhiri dengan .[format].[kompresi]. Contoh: .xlsx .xls .csv
+        </p>
+      </Dragger>
+    </Modal>
   );
 };
 

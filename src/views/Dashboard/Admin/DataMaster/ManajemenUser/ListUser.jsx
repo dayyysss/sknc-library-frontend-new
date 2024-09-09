@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
+import { Table, Pagination, Badge, Button, Input, Select } from "antd";
 import axios from "axios";
+import Swal from "sweetalert2";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { FaEdit } from "react-icons/fa";
-import Swal from "sweetalert2";
-import UpdateUser from "./UpdateUser";
 import { MdOutlineCheckBox } from "react-icons/md";
-import AddUserModal from "./AddUser";
 import { PiMicrosoftExcelLogoLight, PiExportLight } from "react-icons/pi";
 import ImportExcel from "../../ImportExcel";
-import TextField from "@mui/material/TextField";
+import UpdateUser from "./UpdateUser";
+import AddUserModal from "./AddUser";
+import 'antd/dist/reset.css'; // Pastikan gaya Ant Design dimuat
+
+const { Option } = Select;
+const { Search } = Input;
 
 const ListUser = () => {
   document.title = "Dashboard Admin - Data User";
@@ -36,9 +38,9 @@ const ListUser = () => {
           Authorization: `Bearer ${getAuthToken()}`,
         },
         params: {
-          role: role, // Mengirim parameter role ke server
-          search: searchKeyword, // Mengirim parameter pencarian ke server
-          page: page, // Mengirim parameter halaman ke server
+          role: role,
+          search: searchKeyword,
+          page: page,
         },
       });
       if (response.data.success) {
@@ -91,7 +93,7 @@ const ListUser = () => {
   };
 
   const handleUpdate = async (user) => {
-    setSelectedBook(user); // Simpan seluruh objek pengguna, bukan hanya ID
+    setSelectedBook(user);
     setIsModalOpen(true);
   };
 
@@ -100,18 +102,18 @@ const ListUser = () => {
     setIsModalOpen(true);
   };
 
-  const handleChangePage = (event, value) => {
-    setPage(value);
+  const handleChangePage = (page) => {
+    setPage(page);
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
+  const handleSearch = (value) => {
+    setSearchKeyword(value);
     setPage(1);
     fetchData();
   };
 
-  const handleRoleChange = (e) => {
-    setRole(e.target.value);
+  const handleRoleChange = (value) => {
+    setRole(value);
     setPage(1);
     fetchData();
   };
@@ -203,6 +205,97 @@ const ListUser = () => {
     book.name.toLowerCase().includes(searchKeyword.toLowerCase())
   );
 
+  const columns = [
+    {
+      title: 'No',
+      dataIndex: 'index',
+      key: 'index',
+      render: (_, __, index) => (page - 1) * 10 + index + 1,
+      width: '5%',
+      align: 'center',
+    },
+    {
+      title: 'Username',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'Peran',
+      dataIndex: 'roles',
+      key: 'roles',
+      render: roles => (
+        <>
+          {roles.map(role => {
+            let roleColor;
+            if (role.name === "pustakawan") {
+              roleColor = "blue";
+            } else if (role.name === "anggota") {
+              roleColor = "green";
+            } else {
+              roleColor = "gray";
+            }
+
+            return (
+              <Badge key={role.id} color={roleColor} text={role.name} style={{ marginRight: '8px' }} />
+            );
+          })}
+        </>
+      ),
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      render: status => (
+        <Badge
+          color={status === "Belum Aktif" ? "yellow" : "green"}
+          text={status}
+        />
+      ),
+    },
+    {
+      title: 'Image',
+      dataIndex: 'image',
+      key: 'image',
+      render: image => (
+        <img
+          src={image}
+          alt="user"
+          style={{ width: '48px', borderRadius: '50%', border: '1px solid #d9d9d9' }}
+        />
+      ),
+    },
+    {
+      title: 'Aksi',
+      key: 'action',
+      render: (_, user) => (
+        <div className="flex justify-center items-center">
+          {user.status === "Belum Aktif" && (
+            <MdOutlineCheckBox
+              onClick={() => handleStatusChange(user.id)}
+              className="text-white cursor-pointer text-2xl bg-green-500 rounded-full p-1 mr-2"
+            />
+          )}
+          <FaEdit
+            onClick={() => handleUpdate(user)}
+            className="text-white cursor-pointer text-2xl bg-blue-500 rounded-full p-1 mr-2"
+          />
+          <RiDeleteBin5Line
+            onClick={() => handleDelete(user.id)}
+            className="text-white cursor-pointer text-2xl bg-red-500 rounded-full p-1"
+          />
+        </div>
+      ),
+      width: '15%',
+      align: 'center',
+    },
+  ];
+
   return (
     <>
       <div className="min-h-screen px-[25px] pt-[25px] pb-[auto] bg-[#F8F9FC] overflow-auto">
@@ -211,159 +304,64 @@ const ListUser = () => {
             Data User
           </h1>
           <div className="flex">
-            <button
+            <Button
               onClick={handleAddUser}
-              className="bg-blue-500 h-[32px] rounded-[3px] text-white flex items-center justify-center px-[8px] mr-4"
+              type="primary"
+              style={{ marginRight: '8px' }}
             >
               Tambah User
-            </button>
-            <button
-              className="bg-slate-500 h-[32px] rounded-[3px] text-white flex items-center justify-center px-[8px] mr-4"
+            </Button>
+            <Button
+              type="default"
+              style={{ marginRight: '8px' }}
               onClick={exportAll}
             >
               <PiExportLight className="text-xl mr-2" />
               Export User
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={handleImportExcel}
-              className="bg-green-500 h-[32px] rounded-[3px] text-white flex items-center justify-center px-[8px]"
+              type="default"
+              style={{ marginRight: '8px', backgroundColor: '#4CAF50', color: '#fff' }}
             >
               <PiMicrosoftExcelLogoLight className="text-xl mr-2" />
               Import User
-            </button>
+            </Button>
           </div>
         </div>
-        <div className="mt-4 flex items-start justify-between">
-          <TextField
-            label="Cari data user..."
-            variant="outlined"
-            size="small"
-            className="searchKeyword-4 py-2 mr-4 rounded"
-            value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
+        <div className="mt-4 flex items-center justify-between">
+          <Search
+            placeholder="Cari data user..."
+            onSearch={handleSearch}
+            enterButton
+            style={{ width: 300, marginRight: '16px' }}
           />
-
-          <div className="relative ml-4">
-            <select
-              className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-              value={role}
-              onChange={handleRoleChange}
-            >
-              <option value="">Pilih Role</option>
-              <option value="pustakawan">Pustakawan</option>
-              <option value="anggota">Anggota</option>
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-              <svg
-                className="fill-current h-4 w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 12a2 2 0 100-4 2 2 0 000 4z"
-                />
-                <path
-                  fillRule="evenodd"
-                  d="M10 2a8 8 0 100 16 8 8 0 000-16zM1 10a9 9 0 1118 0 9 9 0 01-18 0z"
-                />
-              </svg>
-            </div>
-          </div>
+          <Select
+            placeholder="Pilih Role"
+            value={role}
+            onChange={handleRoleChange}
+            style={{ width: 200 }}
+          >
+            <Option value="">Semua Role</Option>
+            <Option value="pustakawan">Pustakawan</Option>
+            <Option value="anggota">Anggota</Option>
+          </Select>
         </div>
         <p className="mt-4 text-left">Total : {totalBooks}</p>
-        <table className="w-full table-auto mt-4 border border-slate-500 border-collapse bg-white shadow-md text-center">
-          <thead>
-            <tr>
-              <th className="px-4 py-2 border border-[#CBD5E0] w-[5%]">No</th>
-              <th className="px-4 py-2 border border-[#CBD5E0]">Username</th>
-              <th className="px-4 py-2 border border-[#CBD5E0]">Email</th>
-              <th className="px-4 py-2 border border-[#CBD5E0]">Sebagai</th>
-              <th className="px-4 py-2 border border-[#CBD5E0]">Status</th>
-              <th className="px-4 py-2 border border-[#CBD5E0] w-[5%]">Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredBooks.map((user, index) => (
-              <tr key={user.id}>
-                <td className="border px-4 py-2">
-                  {(page - 1) * 10 + index + 1}
-                </td>
-                <td className="border px-4 py-2">{user.name}</td>
-                <td className="border px-4 py-2">{user.email}</td>
-                <td className="border px-4 py-2">
-                  {/* Tampilkan semua role yang dimiliki user dengan warna berbeda */}
-                  {user.roles.map((role) => {
-                    // Tentukan warna berdasarkan nama role
-                    let roleColor;
-                    if (role.name === "pustakawan") {
-                      roleColor = "bg-blue-500"; // Warna untuk pustakawan
-                    } else if (role.name === "anggota") {
-                      roleColor = "bg-green-500"; // Warna untuk anggota
-                    } else {
-                      roleColor = "bg-gray-200"; // Default color untuk role lainnya
-                    }
-
-                    return (
-                      <span
-                        key={role.id}
-                        className={`inline-block ${roleColor} rounded-full px-3 py-1 text-sm font-semibold text-white mr-2`}
-                      >
-                        {role.name}
-                      </span>
-                    );
-                  })}
-                </td>
-                <td className="border px-4 py-2">
-                  <span
-                    className={`text-white px-3 rounded-full p-1 ${user.status === "Belum Aktif"
-                      ? "bg-yellow-500"
-                      : user.status === "Aktif"
-                        ? "bg-green-500"
-                        : ""
-                      }`}
-                  >
-                    {user.status}
-                  </span>
-                </td>
-                <td className="border px-4 py-2">
-                  <div className="flex items-center">
-                    {user.status === "Belum Aktif" && (
-                      <MdOutlineCheckBox
-                        onClick={() => handleStatusChange(user.id)}
-                        className="text-white cursor-pointer text-lg bg-green-500 rounded-full p-1 mr-2 w-7 h-7"
-                      />
-                    )}
-                    <FaEdit
-                      onClick={() => handleUpdate(user)} // Kirim seluruh objek user, bukan hanya user.id
-                      className="text-white cursor-pointer text-lg bg-blue-500 rounded-full p-1 mr-2 w-7 h-7"
-                    />
-                    <RiDeleteBin5Line
-                      onClick={() => handleDelete(user.id)}
-                      className="text-white cursor-pointer w-7 h-7 bg-red-500 rounded-full p-1 mr-2"
-                    />
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-
-        </table>
-        <p className="text-left mt-8">
-          Page: {page} of {totalPages}
-        </p>
-        <div
-          className="flex justify-center items-center mb-9"
-          aria-label="pagination"
-        >
-          <Stack spacing={2}>
-            <Pagination
-              count={totalPages}
-              page={page}
-              onChange={handleChangePage}
-              color="primary"
-            />
-          </Stack>
+        <Table
+          columns={columns}
+          dataSource={filteredBooks}
+          pagination={false}
+          rowKey="id"
+        />
+        <div className="flex justify-center items-center mt-4">
+          <Pagination
+            current={page}
+            total={totalBooks}
+            pageSize={10}
+            onChange={handleChangePage}
+            showSizeChanger={false}
+          />
         </div>
       </div>
 
@@ -385,7 +383,6 @@ const ListUser = () => {
         </div>
       )}
 
-      {/* Modal unggah Excel */}
       {isImportModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg shadow-md">
